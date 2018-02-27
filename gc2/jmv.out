@@ -1,0 +1,8 @@
+GCLogFileSize changed to minimum 8K
+Listening for transport dt_socket at address: 14025
+Starting pid: 4608@kam
+Starting the loop
+Array of size: 5000000 created
+java.lang.OutOfMemoryError: Java heap space
+Dumping heap to ./dumps/ ...
+Unable to create ./dumps/: Invalid argument

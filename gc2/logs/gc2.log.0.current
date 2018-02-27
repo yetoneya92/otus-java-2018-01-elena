@@ -1,0 +1,26 @@
+Java HotSpot(TM) Client VM (25.111-b14) for windows-x86 JRE (1.8.0_111-b14), built on Sep 22 2016 18:54:33 by "java_re" with MS VC++ 10.0 (VS2010)
+Memory: 4k page, physical 2055604k(588780k free), swap 4414900k(1645060k free)
+CommandLine flags: -XX:CMSInitiatingOccupancyFraction=70 -XX:+CMSParallelRemarkEnabled -XX:+CMSScavengeBeforeRemark -XX:GCLogFileSize=8192 -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=./dumps/ -XX:InitialHeapSize=67108864 -XX:MaxHeapSize=67108864 -XX:MaxMetaspaceSize=268435456 -XX:MaxNewSize=22372352 -XX:MaxTenuringThreshold=6 -XX:NewSize=22372352 -XX:NumberOfGCLogFiles=10 -XX:OldPLABSize=16 -XX:OldSize=44736512 -XX:+PrintGC -XX:+PrintGCDateStamps -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -XX:+ScavengeBeforeFullGC -XX:+UseCMSInitiatingOccupancyOnly -XX:+UseConcMarkSweepGC -XX:+UseGCLogFileRotation -XX:-UseLargePagesIndividualAllocation -XX:+UseParNewGC 
+2018-02-27T22:55:26.259+0300: 1.564: [GC (Allocation Failure) 2018-02-27T22:55:26.259+0300: 1.564: [ParNew: 17472K->2176K(19648K), 0.8109471 secs] 37003K->35804K(63360K), 0.8118491 secs] [Times: user=2.61 sys=0.11, real=0.81 secs] 
+2018-02-27T22:55:27.071+0300: 2.376: [GC (CMS Initial Mark) [1 CMS-initial-mark: 33628K(43712K)] 35804K(63360K), 0.0087122 secs] [Times: user=0.05 sys=0.00, real=0.01 secs] 
+2018-02-27T22:55:27.080+0300: 2.385: [CMS-concurrent-mark-start]
+2018-02-27T22:55:27.297+0300: 2.602: [GC (Allocation Failure) 2018-02-27T22:55:27.297+0300: 2.602: [ParNew: 19647K->19647K(19648K), 0.0001225 secs]2018-02-27T22:55:27.297+0300: 2.603: [CMS2018-02-27T22:55:27.401+0300: 2.706: [CMS-concurrent-mark: 0.320/0.321 secs] [Times: user=0.42 sys=0.00, real=0.32 secs] 
+ (concurrent mode failure): 33628K->43711K(43712K), 1.0402399 secs] 53276K->52849K(63360K), [Metaspace: 3222K->3222K(4480K)], 1.0408575 secs] [Times: user=0.97 sys=0.03, real=1.04 secs] 
+2018-02-27T22:55:28.818+0300: 4.123: [Full GC (Allocation Failure) 2018-02-27T22:55:28.818+0300: 4.123: [CMS: 43711K->43712K(43712K), 1.0604461 secs] 63359K->63277K(63360K), [Metaspace: 3222K->3222K(4480K)], 1.0608381 secs] [Times: user=1.06 sys=0.00, real=1.06 secs] 
+2018-02-27T22:55:29.879+0300: 5.185: [GC (CMS Initial Mark) [1 CMS-initial-mark: 43712K(43712K)] 63277K(63360K), 0.1848227 secs] [Times: user=0.22 sys=0.00, real=0.19 secs] 
+2018-02-27T22:55:30.065+0300: 5.370: [CMS-concurrent-mark-start]
+2018-02-27T22:55:30.080+0300: 5.385: [Full GC (Allocation Failure) 2018-02-27T22:55:30.080+0300: 5.385: [CMS2018-02-27T22:55:30.626+0300: 5.931: [CMS-concurrent-mark: 0.560/0.561 secs] [Times: user=0.58 sys=0.00, real=0.56 secs] 
+ (concurrent mode failure): 43712K->43712K(43712K), 2.0778193 secs] 63360K->63306K(63360K), [Metaspace: 3222K->3222K(4480K)], 2.0782763 secs] [Times: user=1.94 sys=0.09, real=2.08 secs] 
+2018-02-27T22:55:32.168+0300: 7.473: [Full GC (Allocation Failure) 2018-02-27T22:55:32.168+0300: 7.473: [CMS: 43712K->43712K(43712K), 1.3997029 secs] 63360K->63360K(63360K), [Metaspace: 3222K->3222K(4480K)], 1.4001827 secs] [Times: user=1.34 sys=0.03, real=1.40 secs] 
+2018-02-27T22:55:33.568+0300: 8.874: [Full GC (Allocation Failure) 2018-02-27T22:55:33.568+0300: 8.874: [CMS: 43712K->43712K(43712K), 1.1416182 secs] 63360K->63360K(63360K), [Metaspace: 3222K->3222K(4480K)], 1.1419116 secs] [Times: user=1.11 sys=0.03, real=1.14 secs] 
+2018-02-27T22:55:34.715+0300: 10.021: [GC (CMS Initial Mark) [1 CMS-initial-mark: 43712K(43712K)] 63360K(63360K), 0.1823042 secs] [Times: user=0.22 sys=0.00, real=0.18 secs] 
+2018-02-27T22:55:34.899+0300: 10.204: [CMS-concurrent-mark-start]
+2018-02-27T22:55:34.900+0300: 10.205: [Full GC (Allocation Failure) 2018-02-27T22:55:34.900+0300: 10.205: [CMS2018-02-27T22:55:35.438+0300: 10.743: [CMS-concurrent-mark: 0.539/0.540 secs] [Times: user=0.55 sys=0.00, real=0.54 secs] 
+ (concurrent mode failure): 43712K->680K(43712K), 0.6630315 secs] 63360K->680K(63360K), [Metaspace: 3222K->3222K(4480K)], 0.6634851 secs] [Times: user=0.67 sys=0.00, real=0.66 secs] 
+Heap
+ par new generation   total 19648K, used 828K [0x04400000, 0x05950000, 0x05950000)
+  eden space 17472K,   4% used [0x04400000, 0x044cf308, 0x05510000)
+  from space 2176K,   0% used [0x05730000, 0x05730000, 0x05950000)
+  to   space 2176K,   0% used [0x05510000, 0x05510000, 0x05730000)
+ concurrent mark-sweep generation total 43712K, used 680K [0x05950000, 0x08400000, 0x08400000)
+ Metaspace       used 3233K, capacity 3246K, committed 3264K, reserved 4480K

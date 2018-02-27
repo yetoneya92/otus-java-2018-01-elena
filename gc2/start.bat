@@ -1,0 +1,2 @@
+
+java -agentlib:jdwp=transport=dt_socket,address=14025,server=y,suspend=n -Xms64m -Xmx64m -XX:MaxMetaspaceSize=256m -XX:+UseConcMarkSweepGC -XX:+CMSParallelRemarkEnabled -XX:+UseCMSInitiatingOccupancyOnly -XX:CMSInitiatingOccupancyFraction=70 -XX:+ScavengeBeforeFullGC -XX:+CMSScavengeBeforeRemark -XX:+UseParNewGC -verbose:gc -Xloggc:./logs/gc2.log -XX:+PrintGCDateStamps -XX:+PrintGCDetails -XX:+UseGCLogFileRotation -XX:NumberOfGCLogFiles=10 -XX:GCLogFileSize=100 -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=./dumps/ -jar target/gc2.jar >jmv.out
