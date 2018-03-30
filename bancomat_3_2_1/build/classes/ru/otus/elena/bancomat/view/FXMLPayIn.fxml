@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<GridPane id="payInPane"  prefHeight="500" prefWidth="600" alignment="CENTER" hgap="10" vgap="10"  xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.otus.elena.bancomat.view.FXMLPayInController">
+     <Label fx:id="payInLabel" minHeight="50.0" prefWidth="500.0"  text="Внесите деньги:" alignment="CENTER" textAlignment="CENTER" GridPane.columnIndex="0" GridPane.rowIndex="0"/> 
+     <HBox fx:id="addMoney" prefHeight="50.0" prefWidth="500.0"   GridPane.columnIndex="0" GridPane.rowIndex="1">       
+       <Button prefWidth="90" text="1" onAction="#handleTakeDenomination"/> 
+       <Button prefWidth="90" text="3" onAction="#handleTakeDenomination"/> 
+       <Button prefWidth="90" text="5" onAction="#handleTakeDenomination"/> 
+       <Button prefWidth="90" text="10" onAction="#handleTakeDenomination"/> 
+       <Button prefWidth="90" text="25" onAction="#handleTakeDenomination"/> 
+       <Button prefWidth="90" text="50" onAction="#handleTakeDenomination"/> 
+       <Button prefWidth="90" text="100" onAction="#handleTakeDenomination"/> 
+     </HBox> 
+     <Label fx:id="paidLabel" minHeight="50.0" prefWidth="500.0"  text="" alignment="CENTER" textAlignment="CENTER" GridPane.columnIndex="0" GridPane.rowIndex="2"/>      
+</GridPane>
