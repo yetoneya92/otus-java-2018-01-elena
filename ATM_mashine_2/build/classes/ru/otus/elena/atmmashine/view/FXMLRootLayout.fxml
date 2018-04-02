@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane id="borderPane" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.otus.elena.atmmashine.view.FXMLRootLayoutController">
+    <padding>
+        <javafx.geometry.Insets bottom="25" left="25" right="25" top="25" />
+    </padding>
+    <top>
+        <HBox prefHeight="50.0" prefWidth="550.0" spacing="10" alignment="CENTER">
+            <Label fx:id="imageLabel" prefHeight="50.0" prefWidth="500.0"  alignment="CENTER"  textAlignment="CENTER"/>
+        </HBox>
+    </top>
+    <bottom>
+        <HBox prefHeight="50.0" prefWidth="550.0" spacing="10" alignment="CENTER">
+            <Button fx:id="returnButton" prefHeight="50.0" prefWidth="250.0" text="На главную" onAction="#handleReturnButton"/>
+            <Button fx:id="exitButton" prefHeight="50.0" prefWidth="250.0" text="Завершить обслуживание" onAction="#handleExitButton"/>
+        </HBox>
+    </bottom>   
+</BorderPane>
