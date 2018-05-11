@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>Cache parameters</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            #size,#hit,#miss {
+                width: 0px;
+                height: 20px;
+                background-color: #008080;
+                position: relative;
+                left: 0px;
+                
+            }
+        </style>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js">
+            
+        </script>
+        <script type="text/javascript">            
+            $(document).ready(function(){              
+                $('#start').on('click',function(){                   
+                  
+                    $.getJSON('cache/cachedata.json', function(data){                                                                                                        
+                        document.getElementById("size").style.width = data["size"] + "px";                         
+                        document.getElementById("cs").innerHTML=data["size"];
+                        document.getElementById("hit").style.width = data["hit"] + "px";
+                        document.getElementById("hc").innerHTML=data["hit"];
+                        document.getElementById("miss").style.width = data["miss"] + "px";
+                        document.getElementById("mc").innerHTML=data["miss"];
+                    });
+         
+               });
+               $('#stop').on('click',function(){
+                   document.getElementById("size").style.width=0+"px";
+                   document.getElementById("cs").innerHTML=0;
+                   document.getElementById("hit").style.width=0+"px";
+                   document.getElementById("hc").innerHTML=0;
+                   document.getElementById("miss").style.width=0+"px";
+                   document.getElementById("mc").innerHTML=0;
+
+               });
+           });         
+        </script>
+    </head>
+    
+    <body>
+        <div>           
+            <img src="images/parameters.png" alt=""/>
+            <br/>
+            <a href="admin.html">Admin</a> <a href="index.html">Index</a></div>
+        <br/>
+        <p>Cache size: <span id="cs"></span></p>
+        <div id="size"></div>
+        <p>Hit count: <span id="hc"></span></p>
+        <div id="hit"></div>
+        <p>Miss count: <span id="mc"></span></p>
+        <div id="miss"></div>                   
+        <br/>
+        <form>
+            <button id="start" type="button">Refresh</button>
+            <button id="stop" type="button">Reset</button>
+        </form>
+    </body>
+</html>
