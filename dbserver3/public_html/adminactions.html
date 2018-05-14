@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Admin actions</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>        
+        <div class="top">
+            <img src="images/adminactions.png"/>
+            <br/><br/>
+            <a href="userservlet">User</a> <a href="adminservlet">Admin</a>  <a href="index.html">Index</a>
+            <br/>
+        </div>
+        <form action="/cacheservlet" method="post">
+            <p><input type="radio" name="param" value="something">Something interesting</p>
+            <p><input type="radio" name="param" value="cache" checked="checked">Cache parameters</p>
+            <p><input type="submit" value="submit">
+                <input type="reset" value="reset">
+            </p>
+        </form>
+    </body>
+</html>

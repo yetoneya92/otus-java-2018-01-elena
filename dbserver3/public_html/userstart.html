@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>User</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <div>           
+            <img src="images/user.png"/>
+            <br/>
+            <a href="adminservlet">Admin</a> <a href="index.html">Index</a>
+        </div>
+        <form action="/userservlet" method="post">
+            <p><input type="radio" name="writer" value="start" checked="checked">Use DB</p>
+            <p><input type="radio" name="writer" value="stop">Stop use DB</p>
+            <p><input type="submit" value="submit">
+                <input type="reset" value="reset">
+            </p>
+        </form>
+        <p>${message}</p>
+    </body>
+</html>
