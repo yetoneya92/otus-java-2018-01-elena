@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html  xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </head>
+    <body>        
+        <div>           
+            <img src="images/baby.png"/>
+            <br/>
+            <a href="admin">Admin</a> <a href="index.html">Index</a> <a href="user">User</a>
+        </div>
+        <form  action="/data" method="post">
+            <input type="hidden" name="tablename" value="baby"/>
+            <table>
+                <tr>
+                    <td>Name: </td>
+                    <td><input type="text" name="babyname" size="30"/></td>
+                </tr>
+                <tr>
+                    <td>Phone: </td>
+                    <td><input type="number" name="phone" size="30"/></td>
+                </tr>    
+            </table>
+            <p>
+                <input type="submit" value="continue"/>
+                <input type="reset" value="reset"/>
+            </p> 
+        </form>
+        <p>${result}</p>
+    </body>
+</html>
