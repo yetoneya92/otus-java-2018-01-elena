@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<GridPane id="testPane" prefHeight="800.0" prefWidth="850.0" alignment="CENTER" hgap="10" vgap="10" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.otus.elena.tester.view.TesterTestController">
+    <padding>
+        <javafx.geometry.Insets bottom="25" left="25" right="25" top="25" />
+    </padding>
+
+    <TextArea fx:id="text" wrapText="true" minWidth="500.0" prefHeight="600.0" prefWidth="850.0"  GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.columnSpan="3">    
+    </TextArea>
+    <TextArea fx:id="error" wrapText="true" minWidth="500.0" prefHeight="100.0" prefWidth="850.0"  GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.columnSpan="3">    
+    </TextArea>   
+    <Button fx:id="saveButton" text="Save" onAction="#btnSaveFile" prefWidth="270" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+    <Button fx:id="compileButton"  text="Compile" onAction="#btnCompile" prefWidth="270" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+    <Button fx:id="returnButton" text="Return" onAction="#btnReturn" prefWidth="270" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+</GridPane>

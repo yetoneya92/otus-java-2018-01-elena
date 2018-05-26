@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.text.*?>
+<BorderPane fx:id="rootPane" prefHeight="800.0" prefWidth="900.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.141" fx:controller="ru.otus.elena.tester.view.TesterRootController">
+    <padding>
+        <javafx.geometry.Insets bottom="25" left="25" right="25" top="25" />
+    </padding>
+    <top> <Text style="-fx-font: NORMAL 20 Tahoma;" text="TESTER"/></top>
+    <bottom>
+        <Button fx:id="exitButton" mnemonicParsing="false" onAction="#btnExit" prefHeight="25.0" prefWidth="200.0" text="Exit" BorderPane.alignment="CENTER" />
+    </bottom>
+</BorderPane>

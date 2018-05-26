@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<GridPane fx:id="root" alignment="CENTER" hgap="10" prefHeight="700.0" prefWidth="900.0" vgap="10" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.otus.elena.tester.view.TesterStartController">
+    <padding>
+        <javafx.geometry.Insets bottom="25" left="25" right="25" top="25" />
+    </padding>
+
+   
+     
+    <Label prefHeight="17.0" prefWidth="200.0" text="Find in:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+    <TextField fx:id="pathId" prefHeight="25.0" prefWidth="700" text="C:\Users\Lena\Documents\NetBeansProjects" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="1" />
+    
+    <Label text="Package name:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+    <TextField fx:id="packageId" prefWidth="500" text="ru.otus.elena.tester.example" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+    
+    <Button fx:id="findButton" onAction="#btnFindFiles" prefWidth="200" text="Find" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+    
+    <ListView fx:id="pathsId" minWidth="500.0" prefHeight="150.0" prefWidth="900.0" GridPane.columnIndex="0" GridPane.columnSpan="4" GridPane.rowIndex="4" GridPane.rowSpan="1">           
+    </ListView>
+    <Label fx:id="filesFoundId" prefHeight="17.0" prefWidth="200.0" text="" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+     <ProgressBar fx:id="barId" GridPane.columnIndex="1" GridPane.rowIndex="5" minWidth="200" progress="0" translateX="100" />
+                   
+    <Button fx:id="launchButton" onAction="#btnLaunchTests" disable="true" prefWidth="200" text="Launch test" GridPane.columnIndex="2" GridPane.rowIndex="5"/>
+    <Button fx:id="createButton" onAction="#btnCreateTest1" disable="true" prefWidth="200" text="Create test" GridPane.columnIndex="3" GridPane.rowIndex="5" />
+    <Label fx:id="testFolder" prefHeight="17.0" prefWidth="200.0" text="Test folder" opacity="0" GridPane.columnIndex="0" GridPane.rowIndex="6" />
+    <TextField fx:id="testFolderName" prefHeight="17.0" prefWidth="400.0" text="" disable="true" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="6" />
+    <ListView fx:id="methodsId" minWidth="500.0" prefHeight="150.0" prefWidth="700.0"  GridPane.columnIndex="0" GridPane.columnSpan="4" GridPane.rowIndex="7" GridPane.rowSpan="1"></ListView>
+    <Button fx:id="editTest" onAction="#btnEditTest" disable="true" prefWidth="200" text="Edit test" GridPane.columnIndex="2" GridPane.rowIndex="8" />
+    <Button fx:id="createTest" onAction="#btnCreateTest2" disable="true" prefWidth="200" text="Create test" GridPane.columnIndex="3" GridPane.rowIndex="8" />
+    <ListView fx:id="testResultContentId"  prefHeight="150.0" prefWidth="700.0"   GridPane.columnIndex="0" GridPane.columnSpan="4" GridPane.rowIndex="9" GridPane.rowSpan="1"></ListView>
+</GridPane>
