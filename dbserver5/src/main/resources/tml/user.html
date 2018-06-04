@@ -1,0 +1,24 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>User action</title>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </head>
+    <body>
+        <div>           
+            <img src="images/user.png"/>
+            <br/>
+            <a href="admin">Admin</a> <a href="index.html">Index</a>
+        </div>        
+        <form action="/wr" method="post">
+   
+            <p><input type="radio" name="action" value="write" checked="checked"/>Write</p>
+            <p><input type="radio" name="action" value="read"/>Read</p>
+            <p><input type="submit" value="continue"/></p>                          
+        </form>
+        <p>${result}</p>
+    </body>
+</html>
