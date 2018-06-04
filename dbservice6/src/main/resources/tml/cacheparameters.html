@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset="UTF-8"/>
+        <title>Cache parameters</title>      
+        <style>
+            #size,#hit,#miss {
+                width: 5px;
+                height: 20px;
+                background-color: #008080;
+                position: relative;
+                left: 0px;
+
+            }
+        </style>
+
+        <script> 
+            function setSize(){              
+                document.getElementById("size").style.width = ${size} + "px";                
+                document.getElementById("hit").style.width = ${hit} + "px";               
+                document.getElementById("miss").style.width = ${miss} + "px";
+            }
+        </script>
+    </head>
+
+    <body onload="setSize();">
+        <div>           
+            <img src="images/parameters.png" alt=""/>
+            <br/>
+            <a href="index.html">Index</a> <a href="admin">Admin</a> <a href="user">User</a>
+            <br/>
+        </div>       
+        <p>Cache size: <span id="sz">${size}</span></p>
+        <div id="size"></div>
+        <p>Hit count: <span id="hc">${hit}</span> </p>
+        <div id="hit"></div>
+        <p>Miss count: <span id="mc">${miss}</span></p>
+        <div id="miss"></div>
+        <br/>
+        <form action="cache" method="get">
+            <p>
+                <input type="submit" value="Refresh"/>               
+            </p>
+        </form>
+    </body>
+</html>
