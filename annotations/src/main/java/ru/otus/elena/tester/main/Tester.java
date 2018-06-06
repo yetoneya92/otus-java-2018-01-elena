@@ -14,7 +14,7 @@ public class Tester {
         
         ArrayList<String> list = new ArrayList<>();
         if (clazz == null) {
-            list.add("class==0");
+            list.add("tests not exist");
             return list;
         }   
         Method[] methods = clazz.getMethods();
