@@ -20,7 +20,7 @@ public class ExampleTest {
     
     @Test
     public void testSum() throws Exception {
-        System.out.println("sum");
+        System.out.println("Testing sum");
         int a = 0;
         int b = 0;
         Example instance = new Example();
@@ -32,7 +32,7 @@ public class ExampleTest {
     
     @Test
     public void testSub() throws Exception {
-        System.out.println("sub");
+        System.out.println("Testing sub");
         int a = 0;
         int b = 0;
         Example instance = new Example();
@@ -45,7 +45,7 @@ public class ExampleTest {
     
     @Test
     public void testExperience() throws Exception {
-        System.out.println("experience");
+        System.out.println("Testing experience");
         int a = 0;
         int b = 0;
         Example instance = new Example();

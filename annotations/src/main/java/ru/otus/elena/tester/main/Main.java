@@ -8,7 +8,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-        ArrayList<String> list = LaunchTest.doWork(ExampleTest.class);
+        ArrayList<String> list = Tester.doWork(ExampleTest.class);
         System.out.println(list);
     }
 }
