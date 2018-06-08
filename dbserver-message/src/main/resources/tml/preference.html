@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Preferences</title>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </head>
+    <body>
+        <div>
+            <img src="images/service.png"/>
+            <br/><br/>           
+            <a href="admin">Admin</a>
+        </div>
+        <form action="/preference" method="post">
+            <p> DB service</p>
+            <p><input type="radio" name="servicetype" value="self" checked="checked"/>Selfmade</p>
+            <p><input type="radio" name="servicetype" value="hibernate"/>Hibernate</p>
+            <br/>
+            <p>Type of cache:</p>
+            <p><input type="radio" name="cache" value="idle" checked="checked"/>IdleTimeCache</p>
+            <p><input type="radio" name="cache" value="life"/> LifeTimeCache</p>           
+            <p><input type="radio" name="cache" value="soft"/>SoftReferenceCache</p>
+            <p><input type="radio" name="cache" value="eternal"/>EternalCache</p>
+            <br/> 
+            <table>
+                <tr>
+                    <td>Max cache size: </td>
+                    <td><input type="number" name="maxsize" value="1000" size="20"/></td>
+                </tr>
+                <tr>
+                    <td>Life time/Idle time ms: </td>
+                    <td><input type="number" name="time" value="1000" size="20"/></td>
+                </tr>    
+            </table>
+            <br/>
+            <p><input type="submit" value="continue"/>
+            </p>
+        </form>
+    </body>
+</html>
