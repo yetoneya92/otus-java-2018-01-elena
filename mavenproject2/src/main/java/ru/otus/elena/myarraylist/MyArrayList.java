@@ -18,8 +18,6 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
-import static java.lang.System.*;
-import java.util.Objects;
 
 
 
@@ -49,7 +47,7 @@ public class MyArrayList<E> implements List<E>{
     }
 
     @Override
-    public E[] toArray() {
+    public E[] toArray() {        
         return Arrays.copyOf(elements, size);
     }
 
@@ -107,6 +105,9 @@ public class MyArrayList<E> implements List<E>{
 
     @Override
     public E get(int index) {
+        if (elements.length == 0) {
+            return null;
+        }
         if (!checkIndex(index)) {
             return null;
         }
@@ -115,6 +116,7 @@ public class MyArrayList<E> implements List<E>{
 
     @Override
     public E set(int index, E element) {
+
         if (!checkIndex(index)) {
             if (index >= size) {
                 elements = Arrays.copyOf(elements, index + 1);
@@ -123,13 +125,17 @@ public class MyArrayList<E> implements List<E>{
                 throw new IndexOutOfBoundsException("wrong index");
             }
         }
+        if (elements.length == 1) {
+            elements[index] = element;
+            return null;
+        }
         E oldElement = elements[index];
         elements[index] = element;
         return oldElement;
     }
-    
+
     @Override
-    public boolean add(E e) {        
+    public boolean add(E e) {
         lastElementNumber += 1;
         if (lastElementNumber >= MAX_ARRAY_SIZE) {
             return false;
@@ -171,8 +177,11 @@ public class MyArrayList<E> implements List<E>{
 
     @Override
     public boolean addAll(Collection<? extends E> coll) {
+        if (coll == null) {
+            return false;
+        }
         int len = coll.size();
-        int temp=lastElementNumber;
+        int temp = lastElementNumber;
         lastElementNumber += len;
         if (lastElementNumber >= size) {
 
@@ -191,6 +200,9 @@ public class MyArrayList<E> implements List<E>{
 
     @Override
     public boolean addAll(int index, Collection<? extends E> coll) {
+        if (coll == null) {
+            return false;
+        }
         if (index < 0) {
             index = 0;
             return addAll(index, coll);                       
@@ -225,6 +237,9 @@ public class MyArrayList<E> implements List<E>{
 
     @Override
     public boolean remove(Object o) {
+        if (elements.length == 0) {
+            return false;
+        }
         if (o == null) {
             for (int index = 0; index < size; index++) {
                 if (elements[index] == null) {
@@ -245,6 +260,9 @@ public class MyArrayList<E> implements List<E>{
 
     @Override
     public E remove(int index) {
+        if (elements.length == 0) {
+            return null;
+        }
         if (!checkIndex(index)) {
             return null;
         }
@@ -267,12 +285,17 @@ public class MyArrayList<E> implements List<E>{
 
     @Override
     public boolean removeAll(Collection<?> coll) {
-            if(coll==null)return false;
-        int counter=0;
-        for (Object o : elements) {            
+        if (coll == null) {
+            return false;
+        }
+        if (elements.length == 0) {
+            return false;
+        }
+        int counter = 0;
+        for (Object o : elements) {
             if (!coll.contains(o)) {
-              elements[counter]=(E)o;              
-              counter++;
+                elements[counter] = (E) o;
+                counter++;
             }
         }
         size=counter;        
@@ -282,15 +305,19 @@ public class MyArrayList<E> implements List<E>{
         return true;
     }    
 
-
     @Override
     public boolean retainAll(Collection<?> coll) {
-        if(coll==null)return false;
-        int counter=0;
-        for (Object o : elements) {            
+        if (coll == null) {
+            return false;
+        }
+        if (elements.length == 0) {
+            return false;
+        }
+        int counter = 0;
+        for (Object o : elements) {
             if (coll.contains(o)) {
-              elements[counter]=(E)o;              
-              counter++;
+                elements[counter] = (E) o;
+                counter++;
             }
         }
         size=counter;        
@@ -302,11 +329,20 @@ public class MyArrayList<E> implements List<E>{
 
     @Override
     public boolean contains(Object o) {
+        if (elements.length == 0) {
+            return false;
+        }
         return indexOf(o) >= 0;
     }
 
     @Override
     public boolean containsAll(Collection<?> coll) {
+        if (coll == null) {
+            return false;
+        }
+        if (elements.length == 0) {
+            return false;
+        }
         for (Object e : coll) {
             if (!this.contains(e)) {
                 return false;
@@ -317,6 +353,9 @@ public class MyArrayList<E> implements List<E>{
 
     @Override
     public int indexOf(Object o) {
+        if (elements.length == 0) {
+            return -1;
+        }
         if (o == null) {
             for (int i = 0; i < size; i++) {
                 if (elements[i] == null) {
@@ -335,6 +374,9 @@ public class MyArrayList<E> implements List<E>{
 
     @Override
     public int lastIndexOf(Object o) {
+        if (elements.length == 0) {
+            return -1;
+        }
         if (o == null) {
             for (int i = size - 1; i >= 0; i--) {
                 if (elements[i] == null) {
@@ -353,16 +395,19 @@ public class MyArrayList<E> implements List<E>{
 
     @Override
     public MyArrayList<E> subList(int fromIndex, int toIndex) {
-        if (!(checkIndex(fromIndex) && checkIndex(toIndex)&&(fromIndex<toIndex))) {
+        if (elements.length == 0) {
             return null;
         }
-        E[]sub=(E[])new Object[toIndex-fromIndex];
-        System.arraycopy(elements, fromIndex, sub, 0, toIndex-fromIndex);
+        if (!(checkIndex(fromIndex) && checkIndex(toIndex) && (fromIndex < toIndex))) {
+            return null;
+        }
+        E[] sub = (E[]) new Object[toIndex - fromIndex];
+        System.arraycopy(elements, fromIndex, sub, 0, toIndex - fromIndex);
         return new MyArrayList(Arrays.asList(sub));
     }
-    
+
     private boolean checkIndex(int index) {
-        if (index > size || index < 0) {
+        if (index >= size || index < 0) {
             return false;
         }
         return true;
