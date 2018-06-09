@@ -2,28 +2,15 @@
 package ru.otus.elena.parallelsort2;
 
 import java.util.Arrays;
-import java.util.Random;
 
 public class ParallelSort {
 
     private  int[][] unsorted;
     private int[]sorted;
-    boolean isFirst=true;
-    int threads;
-    int arrayLength;
-    
-
-    public void test1() {
-        int size = 23;      
-        int[] numbers = new int[size];
-        for (int i = 0; i < size; i++) {
-            numbers[i] = i;
-        }
-        System.out.println(Arrays.toString(numbers));
-        split(numbers, 4);
-        System.out.println(Arrays.deepToString(unsorted));       
-    }
-
+    private boolean isFirst=true;
+    private int threads;
+    private int arrayLength;
+ 
     public void sort(int[] numbers, int threads) {
         if (!checkData(numbers, threads)) {
             sorted=null;
