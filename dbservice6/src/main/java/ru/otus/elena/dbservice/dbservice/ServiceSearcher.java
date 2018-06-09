@@ -47,8 +47,10 @@ public class ServiceSearcher {
                                 } else {
                                     continue m;
                                 }
+                            } else if (field.getGenericType() instanceof ParameterizedType) {
+                                continue s;
                             } else {
-                                
+
                                 System.out.println(field.get(object).getClass().getSimpleName().toLowerCase());
                                 long findInTables = findId((DataSet) field.get(object), field.get(object).getClass().getSimpleName().toLowerCase(), true);
                                 long current = result.getObject(tname + "_" + field.getName().toLowerCase() + "_id", long.class);
