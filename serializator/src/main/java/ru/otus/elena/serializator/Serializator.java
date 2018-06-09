@@ -20,7 +20,7 @@ public class Serializator {
     LinkedList<Object> memory = new LinkedList<>();
     Object obj=null;
 
-    public String toGson(Object obj) {
+    public String toJson(Object obj) {
         try {
             if (obj != null) {
                 memory.add(obj);
@@ -106,7 +106,7 @@ public class Serializator {
                     return false;
                 }
                 Object o = field.get(obj);
-                this.toGson(o);
+                this.toJson(o);
                 this.obj = memory.getLast();
                 break;
         }
