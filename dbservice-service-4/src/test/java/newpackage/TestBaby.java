@@ -54,7 +54,8 @@ public class TestBaby {
         System.out.println(messages);
         System.out.println("object: "+service.loadByName("Katya", Baby.class).getObjects());
         System.out.println("messages: "+service.loadByName("Katya", Baby.class).getMessages());
-        ArrayList<Baby>after=(ArrayList<Baby>)service.load( Baby.class).getObjects();       
+        ArrayList<Baby>after=(ArrayList<Baby>)service.load( Baby.class).getObjects();
+        System.out.println("unknown: "+service.loadByName("Katy", Baby.class));
         System.out.println(after);
         service.shutDown();
     }

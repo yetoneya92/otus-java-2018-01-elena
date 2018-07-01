@@ -133,19 +133,20 @@ public class DBService implements Service{
         if (dataList == null) {
             String command = serviceLoad.getLoadCommand(id, clazz, messages);
             if (command == null) {
-              messages.add("has not been loaded: id="+id+", class="+clazz.getSimpleName());
-              return new LoadResult(data,messages);
+                messages.add("has not been read: id=" + id + ", class=" + clazz.getSimpleName());
+                return new LoadResult(data, messages);
             }
             ArrayList<T> objects = serviceExecution.load(command, clazz, messages);
             if (objects == null || objects.isEmpty()) {
-                return null;
+                messages.add("has not been read: id=" + id + ", class=" + clazz.getSimpleName());
+                return new LoadResult(data, messages);
             }
             return new LoadResult(objects.get(0), messages);
         } else if (dataList.isEmpty()) {
-            messages.add("has not been loaded: id="+id+", class="+clazz.getSimpleName());
+            messages.add("has not been loaded: id=" + id + ", class=" + clazz.getSimpleName());
             return new LoadResult(data, messages);
         } else {
-            messages.add("load: id="+id+", class="+clazz.getSimpleName());
+            messages.add("load: id=" + id + ", class=" + clazz.getSimpleName());
             return new LoadResult(dataList.get(0), messages);
         }
 
@@ -158,14 +159,18 @@ public class DBService implements Service{
         if (objectList == null) {
             String command = serviceLoad.getLoadCommand(name, clazz, messages);
             if (command == null) {
-                messages.add("has not been loaded: name="+name+", class="+clazz.getSimpleName());
-                T data=null;
-                return new LoadResult(data,messages);
+                messages.add("has not been read: name=" + name + ", class=" + clazz.getSimpleName());
+                T data = null;
+                return new LoadResult(data, messages);
             }
             objectList = serviceExecution.load(command, clazz, messages);
             if (objectList.isEmpty() || objectList == null) {
-                messages.add("has not been loaded: name=" + name + ", class=" + clazz.getSimpleName());
+                messages.add("has not been read: name=" + name + ", class=" + clazz.getSimpleName());
             }
+            return new LoadResult(objectList, messages);
+        }
+        if(objectList.isEmpty()){
+            messages.add("has not been read: name=" + name + ", class=" + clazz.getSimpleName());
             return new LoadResult(objectList, messages);
         }
         return new LoadResult(objectList, messages);
