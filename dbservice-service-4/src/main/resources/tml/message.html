@@ -1,0 +1,23 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Messages</title>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </head>
+    <body>
+        <div>           
+            <img src="images/write.png"/>
+            <br/>
+            <a href="index.html">Index</a> <a href="admin">Admin</a>
+        </div> 
+        <p>${result}</p>
+        <form action="/clear" method="post">
+            <p><input type="radio" name="action" value="clear" checked="checked"/>Clear messages</p>
+            <p><input type="radio" name="action" value="add"/>Don't clear</p>
+            <p><input type="submit" value="continue"/></p>                          
+        </form>       
+    </body>
+</html>
