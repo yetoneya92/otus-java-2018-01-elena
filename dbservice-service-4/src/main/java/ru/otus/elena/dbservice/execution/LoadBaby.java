@@ -26,22 +26,22 @@ public class LoadBaby {
         if (baby != null) {
             return baby;
         }
-        String command = "select baby.id, baby_name, phone.id, phone_phone from baby, phone where baby.id like " + id + " and phone.id=baby_phone_id";
+        String command = "select baby.id, baby_name, phone.id, phone_cellphone,phone_homephone from baby, phone where baby.id like " + id + " and phone.id=baby_phone_id";
         return loadBaby(command);
     }
     // не используется
     public Baby loadByPhoneId(long id) {
-        String command = "select baby.id, baby_name, phone.id, phone_phone from baby, phone where phone.id like " + id + " and phone.id=baby_phone_id";
+        String command = "select baby.id, baby_name, phone.id, phone_cellphone,phone_homephone from baby, phone where phone.id like " + id + " and phone.id=baby_phone_id";
         return loadBaby(command);
     }
 
     public ArrayList<Baby> loadByName(String name) {
-        String command = "select baby.id, baby_name, phone.id, phone_phone from baby, phone where baby_name like \"" + name + "\" and phone.id=baby_phone_id";
+        String command = "select baby.id, baby_name, phone.id, phone_cellphone,phone_homephone from baby, phone where baby_name like \"" + name + "\" and phone.id=baby_phone_id";
         return loadBabies(command);
     }
 
     public ArrayList<Baby> load() {
-        String command = "select baby.id, baby_name, phone.id, phone_phone from baby, phone where phone.id=baby_phone_id";
+        String command = "select baby.id, baby_name, phone.id, phone_cellphone,phone_homephone from baby, phone where phone.id=baby_phone_id";
         return loadBabies(command);
     }
 
@@ -54,7 +54,7 @@ public class LoadBaby {
                     obj = new Baby();
                     obj.setId(result.getLong(1));
                     obj.setName(result.getString(2));
-                    Phone phone = new Phone(result.getInt(4), result.getLong(3));
+                    Phone phone = new Phone(result.getInt(4), result.getInt(5),result.getLong(3));
                     obj.setPhone(phone);
                     break;
                 }
@@ -77,7 +77,7 @@ public class LoadBaby {
                     Baby obj = new Baby();
                     obj.setId(result.getLong(1));
                     obj.setName(result.getString(2));
-                    Phone phone = new Phone(result.getInt(4), result.getLong(3));
+                    Phone phone = new Phone(result.getInt(4),result.getInt(5), result.getLong(3));
                     obj.setPhone(phone);
                     objects.add(obj);
                 }

@@ -25,10 +25,12 @@ public class TExecutor {
 
     public void execUpdate(String query, ResultHandler handler) throws SQLException {
         try (Statement stmt = connection.createStatement()) {
-            stmt.execute(query);
+            stmt.execute(query,Statement.RETURN_GENERATED_KEYS);
             ResultSet result = stmt.getGeneratedKeys();
             handler.handle(result);
         }
+        
+        
     }
 
 

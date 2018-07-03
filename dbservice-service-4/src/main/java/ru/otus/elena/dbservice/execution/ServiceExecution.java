@@ -10,9 +10,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.otus.elena.dbservice.dataset.base.DataSet;
+import ru.otus.elena.dbservice.dbservice.CommandContainer;
 import ru.otus.elena.dbservice.dbservice.ServiceCreate;
 import ru.otus.elena.dbservice.dbservice.DBService;
 import ru.otus.elena.dbservice.dbservice.ServiceConnection;
@@ -90,13 +93,39 @@ public class ServiceExecution {
         }
     }
 
-    public<T extends DataSet> int saveAll(Map<T,String> commands, ArrayList<String> messages) {
-        TransactionExecutor exec = new TransactionExecutor(serviceConnection.getConnection());
-        return exec.execUpdate(commands);
+    public <T extends DataSet> int saveAll(ArrayList<CommandContainer> commands) {
+        
+        TExecutor exec = new TExecutor(serviceConnection.getConnection());
+        commands.forEach(s -> {
+            System.out.println(s.getCommand());
+            try {
+                long[] id = new long[1];
+                exec.execUpdate(s.getCommand(), result -> {
+                    while (result.next()) {
+                        id[0] = result.getLong(1);
+                        s.getObject().setId(id[0]);
+                        break;
+                    }
+                });
+                ArrayList<CommandContainer> list = s.getGeneric();
+                if (list != null && !list.isEmpty()) {
+                    list.forEach(m -> {
+                        String command = m.getCommand();
+                        int len = command.length();
+                        command = command.substring(0, len - 1) + "," + s.getObject().getId() + ")";
+                        m.setCommand(command);
+                    });
+                    saveAll(list);
+                }
 
+            } catch (SQLException ex) {
+                Logger.getLogger(ServiceExecution.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+        return 1;
     }
-    
-    public <T extends DataSet> ArrayList<T> load(String command, Class<T> clazz, ArrayList<String> messages) {
+
+    public <T extends DataSet> ArrayList<T> load(String command, Class<T> clazz) {
         try {
             TExecutor exec = new TExecutor(serviceConnection.getConnection());
             ArrayList<T> data = exec.execQuery(command, result -> {
@@ -174,10 +203,10 @@ public class ServiceExecution {
                     
                     break m;
                 }
-                result.last();
                 if (saveobject) {
                     if (id == 0) {
                         service.save((DataSet) object);
+                        id=object.getId();
                     } else {
                         System.out.println(object.toString() + " exists");//id!=0
                     }

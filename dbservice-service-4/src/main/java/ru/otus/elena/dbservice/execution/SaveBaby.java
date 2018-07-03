@@ -16,7 +16,7 @@ import ru.otus.elena.dbservice.executors.TExecutor;
 public class SaveBaby {
 
     private static final String INSERT_INTO_BABY = "insert into baby (id,baby_name,baby_phone_id) values (null,?,?)";
-    private static final String INSERT_INTO_PHONE = "insert into phone (id,phone_phone) values (null,?)";
+    private static final String INSERT_INTO_PHONE = "insert into phone (id,phone_cellphone,phone_homephone) values (null,?,?)";
 
     @Autowired
     private ServiceConnection serviceConnection;
@@ -30,9 +30,9 @@ public class SaveBaby {
                     Iterator iterator = babyList.iterator();
                     while (iterator.hasNext()) {
                         Baby baby = (Baby) iterator.next();
-                        if (result.getInt(2) == baby.getPhone().getPhone()) {
+                        if (result.getInt(2) == baby.getPhone().getCellPhone()&&result.getInt(3)==baby.getPhone().getHomePhone()) {
                             iterator.remove();
-                            messages.add("already exists: phone=" + baby.getPhone().getPhone());
+                            messages.add("already exists: phone=" + baby.getPhone());
                         }
                     }
                 }
@@ -53,7 +53,8 @@ public class SaveBaby {
             serviceConnection.getConnection().setAutoCommit(false);
             execPhone.execUpdate(INSERT_INTO_PHONE, stp -> {
                 for (Baby baby : babies) {
-                    stp.setInt(1, baby.getPhone().getPhone());
+                    stp.setInt(1, baby.getPhone().getCellPhone());
+                    stp.setInt(2, baby.getPhone().getHomePhone());
                     int p = stp.executeUpdate();
                     counter[0] += p;
                     if (p != 0) {

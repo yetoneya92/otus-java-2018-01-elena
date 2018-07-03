@@ -33,7 +33,7 @@ public class ServiceTest {
                 }
                 int suffix = generator.nextInt(1000);
                 String name = "baby" + suffix;
-                ArrayList<String>messages=service.save(new Baby(name, new Phone(suffix)));
+                ArrayList<String>messages=service.save(new Baby(name, new Phone(suffix,suffix/2)));
                 System.out.println(messages);
                 try {
                     Thread.sleep(50);

@@ -27,13 +27,13 @@ public class ServiceSave {
     }
 
 
-    synchronized <T extends DataSet> Map<T,String> createSaveCommand(ArrayList<T> list, ArrayList<String> messages) {
+    synchronized <T extends DataSet> ArrayList<CommandContainer> createSaveCommand(ArrayList<T> list, ArrayList<String> messages) {
         removeDuplicates(list, messages);
-        Map<T,String>commands = new HashMap<>();
+        ArrayList<CommandContainer>commands = new ArrayList<>();
         for (T object : list) {
-            String command = createCommand(object, messages,commands);
-            if (command != null) {
-                commands.put(object,command);
+            CommandContainer container = createCommand(object, messages);
+            if (container != null) {
+                commands.add(container);
             }
         }
         return commands;
@@ -56,14 +56,18 @@ public class ServiceSave {
     }
 
 
-    protected <T extends DataSet> String createCommand(T object, ArrayList<String> messages, Map<T, String> commands) {
+    protected <T extends DataSet> CommandContainer createCommand(T object, ArrayList<String> messages) {
         String tableName = object.getClass().getSimpleName().toLowerCase();
         for (Table table : Table.values()) {
             if (table.name().equalsIgnoreCase(tableName)) {
                 return null;
             }
         }
+        if(!serviceTable.tableExists(object.getClass())){
+            serviceTable.createTable(object.getClass(), messages);
+        }
         StringBuilder builder = new StringBuilder("INSERT INTO " + tableName + " VALUES(null");
+        ArrayList<CommandContainer>genericCommand=new ArrayList<>();
         try {
             e:
             for (Field field : object.getClass().getDeclaredFields()) {
@@ -74,32 +78,27 @@ public class ServiceSave {
                 } else if (fieldType.equals("string")) {
                     builder.append(",'").append(field.get(object)).append("'");
                 } else if (field.getGenericType() instanceof ParameterizedType) {
-                    getSaveGenericCommands(object, field, tableName, messages,commands).forEach(commands::putIfAbsent);
+                    genericCommand.addAll(getSaveGenericCommands(object, field, tableName, messages));
                 } else if (field.getType().getName().contains("java")) {
                     messages.add("has not saved: " + object.toString());
                     return null;
                 } else {
                     ArrayList<String> tableNames = serviceTable.getTableNames();
-                    System.out.println(tableNames);
-                    String tname = field.get(object).getClass().getSimpleName().toLowerCase();
-                    long _id=-1;
+                    String tname = field.get(object).getClass().getSimpleName().toLowerCase();                    
                     if (!tableNames.contains(tname)) {
-                        boolean isCreated = serviceTable.createTable((Class<? extends DataSet>) field.get(object).getClass(),messages);
-                        if (!isCreated) {
+                        boolean isCreated = serviceTable.createTable((Class<? extends DataSet>) field.get(object).getClass(), messages);
+                        if (isCreated) {
                             System.out.println("table " + fieldType + " bas been created");
-                            _id = 0;
                         } else {
                             messages.add("has not saved: " + object.toString());
                             return null;
                         }
-                    } else {
-                        _id = serviceExecution.findInTables((DataSet) field.get(object), tname, true);
                     }
+                    long _id=serviceExecution.findInTables((DataSet) field.get(object), tname, true);
                     if (_id == -1) {
-                        System.out.println("has not been saved: " + field.get(object).toString());
                         messages.add("has not been saved: " + field.get(object).toString());
                         return null;
-                    }
+                    }                    
                     builder.append(",").append(_id);
                 }
             }
@@ -107,27 +106,27 @@ public class ServiceSave {
             System.out.println(ex.getMessage());
         }        
         builder.append(")");
-        messages.add(object.toString());
-        System.out.println(builder.toString());        
-        return builder.toString();
+        //System.out.println(builder.toString());
+        return new CommandContainer(object,builder.toString(),genericCommand);
     }
-
-    synchronized <T extends DataSet> Map<T,String> getSaveGenericCommands(T object, Field field, String tableName, ArrayList<String> messages, Map<T,String> commands) throws IllegalArgumentException, IllegalAccessException {
+    
+    synchronized <T extends DataSet> ArrayList<CommandContainer> getSaveGenericCommands(T object, Field field, String tableName, ArrayList<String> messages) 
+            throws IllegalArgumentException, IllegalAccessException {
         ArrayList<T> objectList = new ArrayList<>();
-        Map<T,String> map = new HashMap<>();
+        CommandContainer[] container=new CommandContainer[1];
+        ArrayList<CommandContainer>containerList=new ArrayList<>();
         if (field.get(object) instanceof Collection) {
             Collection coll = (Collection) field.get(object);
-            objectList.addAll(coll);           
+            objectList.addAll(coll);
+            
             objectList.forEach(s -> {
-                String command = createCommand(s, messages, commands);
-                int len=command.length();
-                command=command.substring(0, len-1)+","+object.getId()+")";
-                map.put(s,command);
+                
+                container[0]=createCommand(s, messages);
+
+                containerList.add(container[0]);
             });
-            return map;
-        } else {
-            return map;
         }
+        return containerList;
     }
- 
+
 }

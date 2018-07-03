@@ -95,13 +95,18 @@ public class DBService implements Service{
             }
             saved = saveStandard.saveStandard(objectList, messages);            
             if (!objectList.isEmpty()) {
-                Map<T,String> commands = serviceSave.createSaveCommand(objectList, messages);
-                if (commands != null && commands.size() > 0) {
-                    saved = serviceExecution.saveAll(commands, messages);
+                ArrayList<CommandContainer>commands = serviceSave.createSaveCommand(objectList, messages);                                
+                if (commands != null && commands.size() > 0) {                                        
+                    saved = serviceExecution.saveAll(commands);
                 }
             }
+            initial.forEach(s -> {
+                if (s.getId() != 0) {
+                    messages.add("object has been saved: " + s.toString());
+                }
+            });
             messages.add("saved objects=" + saved);
-            if (cache!=null) {
+            if (cache != null) {
                 initial.forEach(s -> {
                     if (s.getId() != 0) {
                         cache.put(s);
@@ -136,7 +141,7 @@ public class DBService implements Service{
                 messages.add("has not been read: id=" + id + ", class=" + clazz.getSimpleName());
                 return new LoadResult(data, messages);
             }
-            ArrayList<T> objects = serviceExecution.load(command, clazz, messages);
+            ArrayList<T> objects = serviceExecution.load(command, clazz);
             if (objects == null || objects.isEmpty()) {
                 messages.add("has not been read: id=" + id + ", class=" + clazz.getSimpleName());
                 return new LoadResult(data, messages);
@@ -163,7 +168,7 @@ public class DBService implements Service{
                 T data = null;
                 return new LoadResult(data, messages);
             }
-            objectList = serviceExecution.load(command, clazz, messages);
+            objectList = serviceExecution.load(command, clazz);
             if (objectList.isEmpty() || objectList == null) {
                 messages.add("has not been read: name=" + name + ", class=" + clazz.getSimpleName());
             }
@@ -182,7 +187,7 @@ public class DBService implements Service{
         ArrayList<T> objectList = loadStandard.load(clazz);
         if (objectList == null) {
             String command = serviceLoad.getLoadCommand(clazz, messages);
-            return new LoadResult(serviceExecution.load(command, clazz, messages),messages);
+            return new LoadResult(serviceExecution.load(command, clazz),messages);
         }
         return new LoadResult(objectList, messages);
     }
