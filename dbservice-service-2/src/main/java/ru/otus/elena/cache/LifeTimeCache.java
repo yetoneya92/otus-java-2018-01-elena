@@ -8,7 +8,7 @@ import java.util.concurrent.*;
 import java.util.function.Function;
 import ru.otus.elena.dbservice.dataset.base.DataSet;
 
-public class LifeTimeCache<T extends DataSet> implements ServiceCache {
+public class LifeTimeCache<T extends DataSet> implements DBCache {
 
     private static final int TIME_THRESHOLD_MS = 5;
 

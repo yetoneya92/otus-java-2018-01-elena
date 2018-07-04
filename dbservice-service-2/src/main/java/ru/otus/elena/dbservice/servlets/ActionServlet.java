@@ -9,32 +9,27 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import ru.otus.elena.dbservice.interfaces.Service;
-import ru.otus.elena.cache.ServiceCache;
-import ru.otus.elena.dbservice.main.DBServicePreference;
+import org.springframework.beans.factory.annotation.Autowired;
+import ru.otus.elena.dbservice.services.ServiceSetting;
+import ru.otus.elena.cache.DBCache;
+import ru.otus.elena.dbservice.dbservice.DBService;
+import ru.otus.elena.dbservice.main.DBServiceContext;
 import ru.otus.elena.dbservice.main.MessageHandlerService;
 
+public class ActionServlet extends HttpServlet {
 
-public class ActionServlet extends HttpServlet{
-      private static final String SOMETHING_PAGE_TEMPLATE = "something.html";
-      private static final String PARAMETERS_PAGE_TEMPLATE = "cacheparameters.html";
-      private static final String ACTIONS_PAGE_TEMPLATE="adminactions.html";
-      private static final String LOGIN_PAGE_TEMPLATE = "login.html";
-      private static final String PREFERENCES_PAGE_TEMPLATE = "preference.html";
-      private static final String CREATETABLE_PAGE_TEMPLATE = "createtable.html";
-      private static final String DELETETABLE_PAGE_TEMPLATE = "deletetable.html";
-      private static final String TEST_PAGE_TEMPLATE = "test1.html";
-      private final TemplateProcessor templateProcessor;
-
-    @SuppressWarnings("WeakerAccess")
-    public ActionServlet(TemplateProcessor templateProcessor) {
-        this.templateProcessor = templateProcessor;
-    }
-
-    @SuppressWarnings("WeakerAccess")
-    public ActionServlet() throws IOException {
-        this(new TemplateProcessor());
-    }
+    private static final String SOMETHING_PAGE_TEMPLATE = "something.html";
+    private static final String PARAMETERS_PAGE_TEMPLATE = "cacheparameters.html";
+    private static final String ACTIONS_PAGE_TEMPLATE = "adminactions.html";
+    private static final String LOGIN_PAGE_TEMPLATE = "login.html";
+    private static final String PREFERENCES_PAGE_TEMPLATE = "preference.html";
+    private static final String CREATETABLE_PAGE_TEMPLATE = "createtable.html";
+    private static final String DELETETABLE_PAGE_TEMPLATE = "deletetable.html";
+    private static final String TEST_PAGE_TEMPLATE = "test1.html";    
+    private TemplateProcessor templateProcessor=DBServiceContext.getTemplateProcessor();;    
+    private ServiceSetting serviceSetting=DBServiceContext.getServiceSetting();
+    private DBService service=DBServiceContext.getService();
+    private MessageHandlerService handler=DBServiceContext.getHandler();
 
     @Override
     public void doPost(HttpServletRequest request,
@@ -42,12 +37,11 @@ public class ActionServlet extends HttpServlet{
         String page = null;
         Map<String, Object> pageVariables = new HashMap<>();
         try{
-        String login = DBServicePreference.getDBServicePreference().getLogin();
+        String login = serviceSetting.getLogin();
         if (login == null) {
             pageVariables.put("result","");
             page = templateProcessor.getPage(LOGIN_PAGE_TEMPLATE, pageVariables);
         } else {
-            Service service=DBServicePreference.getDBServicePreference().getService();
             String action = request.getParameter("action");
             switch (action) {
                 case "setservice":
@@ -77,7 +71,7 @@ public class ActionServlet extends HttpServlet{
                     break;
                     case "cache":
                         if (service != null) {
-                            ServiceCache cache = service.getCache();
+                            DBCache cache = service.getCache();
                             if (cache != null) {
                                 pageVariables.put("size", cache.getCacheSize());
                                 pageVariables.put("hit", cache.getHitCount());
@@ -95,10 +89,13 @@ public class ActionServlet extends HttpServlet{
                     case "shutdown":
                         pageVariables.put("result", "service shutdown");
                         page = templateProcessor.getPage(ACTIONS_PAGE_TEMPLATE, pageVariables);
-                        MessageHandlerService.getMessageHandlerService().shutdownService();
+                        handler.shutdownService();
+                        break;
+                    default:
+                        pageVariables.put("result", "unknown action");
+                        page = templateProcessor.getPage(ACTIONS_PAGE_TEMPLATE, pageVariables);
                 }
             }
-
             response.setContentType("text/html;charset=utf-8");
             response.getWriter().println(page);
             response.setStatus(HttpServletResponse.SC_OK);
@@ -116,7 +113,7 @@ public class ActionServlet extends HttpServlet{
             HttpServletResponse response) throws ServletException, IOException {
         Map<String, Object> pageVariables = new HashMap<>();
         String page = null;
-        String login = DBServicePreference.getDBServicePreference().getLogin();
+        String login = serviceSetting.getLogin();
         if (login == null) {
             pageVariables.put("result", "");
             page = templateProcessor.getPage(LOGIN_PAGE_TEMPLATE, pageVariables);

@@ -4,13 +4,14 @@ package ru.otus.elena.dbservice.interfaces;
 import java.util.ArrayList;
 import java.util.List;
 import ru.otus.elena.dbservice.dataset.base.DataSet;
-import ru.otus.elena.cache.ServiceCache;
+import ru.otus.elena.cache.DBCache;
+import ru.otus.elena.dbservice.dbservice.LoadResult;
 
 public interface Service {
 
-    public <T extends DataSet> boolean createTable(String tableName);
+    public <T extends DataSet> ArrayList<String> createTable(String tableName);
     
-    public boolean createTable(Class<? extends DataSet> clazz);    
+    public ArrayList<String> createTable(Class<? extends DataSet> clazz);    
     
     public ArrayList<String> getTableNames();
     
@@ -20,19 +21,19 @@ public interface Service {
     
     public boolean deleteAllTables();
     
-    public <T extends DataSet> ArrayList<String> saveAll(T... data);
-    
+    public <T extends DataSet> ArrayList<String> saveAll(ArrayList<T>objects);
+ 
     public <T extends DataSet> ArrayList<String> save(T object);
 
-    public <T extends DataSet> T loadById(long id, Class<T> clazz);
+    public <T extends DataSet> LoadResult loadById(long id, Class<T> clazz);
+
+    public <T extends DataSet> LoadResult loadByName(String name, Class<T> clazz);
+   
+    public <T extends  DataSet> LoadResult load(Class<T> clazz);
     
-    public <T extends DataSet> T loadByName(String name, Class<T>clazz);
+    public void setCache(DBCache cache);
     
-    public <T extends  DataSet> List<T> load(Class<T> clazz);
-    
-    public void setCache(ServiceCache cache);
-    
-    public ServiceCache getCache();
+    public DBCache getCache();
 
     public void shutDown();
     

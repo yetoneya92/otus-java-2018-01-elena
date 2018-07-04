@@ -4,7 +4,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import ru.otus.elena.dbservice.dataset.base.DataSet;
 
-public class EternalCache<T extends DataSet> implements ServiceCache {    
+public class EternalCache<T extends DataSet> implements DBCache {    
     
     private final int maxElements;
     private final Map<KeyElement,DataSet> elements = new LinkedHashMap<>();   
