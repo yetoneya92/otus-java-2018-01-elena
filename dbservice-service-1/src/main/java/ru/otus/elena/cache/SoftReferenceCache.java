@@ -8,7 +8,7 @@ import java.util.Map;
 
 import ru.otus.elena.dbservice.dataset.base.DataSet;
 
-public class SoftReferenceCache<T extends DataSet> implements ServiceCache {
+public class SoftReferenceCache<T extends DataSet> implements DBCache {
     private int hitCount;
     private int missCount;
     private int maxElements;

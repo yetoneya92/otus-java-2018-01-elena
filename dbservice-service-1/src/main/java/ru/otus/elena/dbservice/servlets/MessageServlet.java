@@ -9,29 +9,24 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+import ru.otus.elena.dbservice.main.DBServiceContext;
 import ru.otus.elena.dbservice.main.MessageHandlerService;
 import ru.otus.elena.dbservice.services.TemplateProcessor;
 
 public class MessageServlet extends HttpServlet{
         
     private static final String MESSAGE_PAGE_TEMPLATE = "message.html";
-    private final TemplateProcessor templateProcessor;
-
-    @SuppressWarnings("WeakerAccess")
-    public MessageServlet(TemplateProcessor templateProcessor) {
-        this.templateProcessor = templateProcessor;
-    }
-
-    @SuppressWarnings("WeakerAccess")
-    public MessageServlet() throws IOException {
-        this(new TemplateProcessor());
-    }
+    @Autowired
+    private TemplateProcessor templateProcessor=DBServiceContext.getTemplateProcessor();
+    @Autowired
+    private MessageHandlerService handler=DBServiceContext.getHandler();
 
     @Override
     public void doGet(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
         Map<String, Object> pageVariables = new HashMap<>();
-        ArrayList<String> list = MessageHandlerService.getMessageHandlerService().getInputMessages();
+        ArrayList<String>list=handler.getInputMessages();
         if (list != null) {
             StringBuilder builder = new StringBuilder();
             for (String s : list) {

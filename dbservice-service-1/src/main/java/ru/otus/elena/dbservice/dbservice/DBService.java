@@ -1,75 +1,65 @@
 
 package ru.otus.elena.dbservice.dbservice;
 
+import ru.otus.elena.dbservice.execution.ServiceExecution;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+import java.util.Map;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import ru.otus.elena.dbservice.dataset.base.DataSet;
-import ru.otus.elena.dbservice.dataset.tables.Table;
 import ru.otus.elena.dbservice.interfaces.Service;
-import ru.otus.elena.cache.ServiceCache;
+import ru.otus.elena.cache.DBCache;
 
-
+@Component
 public class DBService implements Service{
     
-    private static volatile DBService service;
-    private static volatile DBServiceExecution serviceExec;
-    private static volatile DBServiceTable serviceTable;
-    private static volatile DBServiceSave serviceSave;
-    private static volatile DBServiceLoad serviceLoad;
-    public boolean useCache;
-    public ServiceCache cache;
+    @Autowired
+    private ServiceExecution serviceExecution;
+    @Autowired
+    private ServiceTable serviceTable;
+    @Autowired
+    private ServiceSave serviceSave;
+    @Autowired
+    private ServiceLoad serviceLoad;
+    @Autowired
+    private SaveStandard saveStandard;
+    @Autowired
+    private LoadStandard loadStandard;
+    @Autowired
+    private ServiceConnection serviceConnection;
+    private DBCache cache;
 
 
-    private DBService() {
-        
-    }
-
-    public static DBService getService() {
-        if (service == null) {
-            return getService("localhost", "db_example", "me", "me");
-        }
-        return service;
-    }
-
-    public static DBService getService(String host, String databaseName, String user, String password) {
-        if (service == null) {
-            synchronized (DBService.class) {
-                if (service == null) {
-                    service = new DBService();
-                    serviceExec = DBServiceExecution.getServiceExecution(host, databaseName, user, password);
-                    serviceTable=DBServiceTable.getServiceTable();
-                    serviceLoad=DBServiceLoad.getServiceLoad();
-                    serviceSave=DBServiceSave.getServiceSave();
-                    
-
-                }
-            }
-        }
-        return service;
-
+    public DBService() {        
     }
 
     @Override
-    public void setCache(ServiceCache cache) {
-        this.useCache = true;
+    public void setCache(DBCache cache) {
         this.cache = cache;        
     }
 
-    public ServiceCache getCache() {
+    public DBCache getCache() {
         return cache;
     }
     
-
     @Override
-    public <T extends DataSet> boolean createTable(String tableName) {
-        return serviceTable.createTable(tableName);
+    public <T extends DataSet> ArrayList<String> createTable(String tableName) {
+        ArrayList<String> messages = new ArrayList<>();
+        boolean isCreated = serviceTable.createTable(tableName, messages);
+        if (isCreated) {
+            messages.add("Table " + tableName + " has been created");
+        }
+        return messages;
     }
 
     @Override
-    public boolean createTable(Class<? extends DataSet> clazz) {
-        return serviceTable.createTable(clazz);
+    public ArrayList<String> createTable(Class<? extends DataSet> clazz) {
+        ArrayList<String> messages = new ArrayList<>();
+        boolean isCreated = serviceTable.createTable(clazz, messages);
+        if (isCreated) {
+            messages.add("Table " + clazz.getSimpleName().toLowerCase() + " has been created");
+        }
+        return messages;
     }
 
     @Override
@@ -92,86 +82,119 @@ public class DBService implements Service{
        return serviceTable.deleteAllTables();
     }
 
-    public <T extends DataSet> ArrayList<String> saveAll(T... data) {
-        ArrayList<T> listObjects = new ArrayList<>(Arrays.asList(data));
-        if(useCache){
-            findDublicateInCache(listObjects);
-        }
-        for (T object : data) {
-            if (!serviceExec.tableExists(object.getClass())) {
-                createTable(object.getClass());
-            }
-        }
+    @Override
+    public <T extends DataSet> ArrayList<String> saveAll(ArrayList<T> objectList) {
+        int saved = 0;
+        ArrayList<T> initial = new ArrayList<>(objectList);
         ArrayList<String> messages = new ArrayList<>();
-        ArrayList<String> commands = serviceSave.createSaveCommand(listObjects, messages);
-        if (commands != null && commands.size() > 0) {
-            int saved = serviceExec.saveAll(commands);
-            if (saved != 0) {
-                messages.add("saved objects=" + saved);
-                if (useCache) {
-                    listObjects.forEach(s -> cache.put(s));
+        if (!objectList.isEmpty()) {
+            for (T object : objectList) {
+                if (!serviceTable.tableExists(object.getClass())) {
+                    createTable(object.getClass());
                 }
             }
-            return messages;
+            saved = saveStandard.saveStandard(objectList, messages);            
+            if (!objectList.isEmpty()) {
+                ArrayList<CommandContainer>commands = serviceSave.createSaveCommand(objectList, messages);                                
+                if (commands != null && commands.size() > 0) {                                        
+                    saved = serviceExecution.saveAll(commands);
+                }
+            }
+            initial.forEach(s -> {
+                if (s.getId() != 0) {
+                    messages.add("object has been saved: " + s.toString());
+                }
+            });
+            messages.add("saved objects=" + saved);
+            if (cache != null) {
+                initial.forEach(s -> {
+                    if (s.getId() != 0) {
+                        cache.put(s);
+                    }
+                });
+            }
         }
-        messages.add("has not been saved");
         return messages;
     }
 
     @Override
     public <T extends DataSet> ArrayList<String> save(T object) {
-
-        return saveAll(object);
+        ArrayList<T> objectList = new ArrayList<>();
+        objectList.add(object);
+        return saveAll(objectList);
     }
 
     @Override
-    public <T extends DataSet> T loadById(long id, Class<T> clazz) {
+    public <T extends DataSet> LoadResult loadById(long id, Class<T> clazz) {
+        ArrayList<String> messages = new ArrayList<>();
         T data = null;
-        if (useCache) {
+        if (cache != null) {
             data = cache.get(id, clazz);
             if (data != null) {
-                return data;
+                return new LoadResult(data, messages);
             }
         }
-        String command = serviceLoad.getLoadCommand(id, clazz);
-        if (command == null) {
-            return null;
+        ArrayList<T> dataList = loadStandard.loadById(id, clazz);
+        if (dataList == null) {
+            String command = serviceLoad.getLoadCommand(id, clazz, messages);
+            if (command == null) {
+                messages.add("has not been read: id=" + id + ", class=" + clazz.getSimpleName());
+                return new LoadResult(data, messages);
+            }
+            ArrayList<T> objects = serviceExecution.load(command, clazz);
+            if (objects == null || objects.isEmpty()) {
+                messages.add("has not been read: id=" + id + ", class=" + clazz.getSimpleName());
+                return new LoadResult(data, messages);
+            }
+            return new LoadResult(objects.get(0), messages);
+        } else if (dataList.isEmpty()) {
+            messages.add("has not been loaded: id=" + id + ", class=" + clazz.getSimpleName());
+            return new LoadResult(data, messages);
+        } else {
+            messages.add("load: id=" + id + ", class=" + clazz.getSimpleName());
+            return new LoadResult(dataList.get(0), messages);
         }
-        return serviceExec.loadById(command, clazz);
+
     }
 
     @Override
-    public <T extends DataSet> T loadByName(String name, Class<T> clazz) {
-        String command = serviceLoad.getLoadCommand(name, clazz);
-        if (command == null) {
-            return null;
+    public <T extends DataSet> LoadResult loadByName(String name, Class<T> clazz) {
+        ArrayList<String> messages = new ArrayList<>();
+        ArrayList<T> objectList = loadStandard.loadByName(name, clazz);
+        if (objectList == null) {
+            String command = serviceLoad.getLoadCommand(name, clazz, messages);
+            if (command == null) {
+                messages.add("has not been read: name=" + name + ", class=" + clazz.getSimpleName());
+                T data = null;
+                return new LoadResult(data, messages);
+            }
+            objectList = serviceExecution.load(command, clazz);
+            if (objectList.isEmpty() || objectList == null) {
+                messages.add("has not been read: name=" + name + ", class=" + clazz.getSimpleName());
+            }
+            return new LoadResult(objectList, messages);
         }
-        return serviceExec.loadByName(name, clazz);
+        if(objectList.isEmpty()){
+            messages.add("has not been read: name=" + name + ", class=" + clazz.getSimpleName());
+            return new LoadResult(objectList, messages);
+        }
+        return new LoadResult(objectList, messages);
     }
 
     @Override
-    public <T extends DataSet> List<T> load(Class<T> clazz) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
-    public<T extends DataSet>void findDublicateInCache(ArrayList<T>objects){
-        Iterator<T> iterator = objects.iterator();
-        s:
-        while (iterator.hasNext()) {
-            T object = iterator.next();
-            if (object.getId() == 0) {
-                continue s;
-            }
-            if (cache.get(object.getId(), object.getClass()) != null) {
-                iterator.remove();               
-            }           
+    public <T extends DataSet> LoadResult load(Class<T> clazz) {
+        ArrayList<String> messages = new ArrayList<>();
+        ArrayList<T> objectList = loadStandard.load(clazz);
+        if (objectList == null) {
+            String command = serviceLoad.getLoadCommand(clazz, messages);
+            return new LoadResult(serviceExecution.load(command, clazz),messages);
         }
+        return new LoadResult(objectList, messages);
     }
-    
+
     @Override
     public void shutDown() {
-        serviceExec.shutDown();
+        serviceConnection.shutDown();
     }
-
 
 }

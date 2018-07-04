@@ -5,6 +5,9 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import ru.otus.elena.dbservice.configuration.ServiceConfiguration;
 import ru.otus.elena.dbservice.services.TemplateProcessor;
 
 /**
@@ -22,10 +25,11 @@ public class DBServiceMain {
     private final static String PUBLIC_HTML = "public_html";
 
     public static void main(String[] args) throws Exception {
+        DBServiceContext serviceContext=new DBServiceContext();
         ResourceHandler resourceHandler = new ResourceHandler();
         resourceHandler.setResourceBase(PUBLIC_HTML);
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
-        TemplateProcessor templateProcessor = new TemplateProcessor();
+       // TemplateProcessor templateProcessor = new TemplateProcessor();
         context.addServlet(PreferenceServlet.class, "/preference");
         context.addServlet(AdminServlet.class, "/admin");
         context.addServlet(ActionServlet.class, "/action");
@@ -35,15 +39,9 @@ public class DBServiceMain {
         context.addServlet(TestServlet.class,"/test");
         context.addServlet(MessageServlet.class,"/message");
         context.addServlet(ClearServlet.class,"/clear");
+        context.addServlet(ConnectionServlet.class, "/connection");
         Server server = new Server(PORT);
         server.setHandler(new HandlerList(resourceHandler, context));
-        while (true) {
-            DBServiceSocket serviceSocket = DBServiceSocket.getServiceSocket();
-            if(serviceSocket!=null){
-                serviceSocket.start();
-                break;
-            }
-        }
         server.start();
         server.join();
     }

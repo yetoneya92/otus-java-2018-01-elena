@@ -1,6 +1,7 @@
 
 package ru.otus.elena.dbservice.main;
 
+import ru.otus.elena.dbservice.services.ServiceSetting;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -15,6 +16,7 @@ import java.util.logging.Logger;
 import ru.otus.elena.dbservice.message.MessageContainer;
 import com.google.gson.Gson;
 import java.util.ArrayList;
+import org.springframework.beans.factory.annotation.Autowired;
 import ru.otus.elena.dbservice.interfaces.Service;
 import ru.otus.elena.dbservice.message.Message;
 
@@ -24,41 +26,28 @@ public class MessageHandlerService {
     private static final int WORKERS_COUNT = 3;
     private final BlockingQueue<MessageContainer> output = new LinkedBlockingQueue<>();
     private final BlockingQueue<MessageContainer> input = new LinkedBlockingQueue<>();
-    private final static ArrayList<String> inputMessageList=new ArrayList();
-    private static MessageExecutor messageExecutor;
-    private  Socket socket;
-    private static ExecutorService executor;
-    public static MessageHandlerService handler=null;
-    private static Service service;
-    private  volatile boolean isStopped=true;
- 
-    public static MessageHandlerService getMessageHandlerService() {
-        if (handler == null) {
-            synchronized(MessageHandlerService.class){
-                if(handler==null){
-                   executor = Executors.newFixedThreadPool(WORKERS_COUNT); 
-                   messageExecutor=new MessageExecutor();
-                   handler=new MessageHandlerService();
-                }
-            }
-        }
-        return handler;
-    }
+    private final ArrayList<String> inputMessageList=new ArrayList();
+    @Autowired
+    private MessageExecutor messageExecutor;
+    private Socket socket;
+    private boolean isStopped=true;
+    private ExecutorService executor;
+    @Autowired
+    private Service service;
 
+    public MessageHandlerService(){
+        
+    }
+    
     public void setSocket(Socket socket) {
         this.socket = socket;
     }
 
-    public void setService(Service service) {
-        this.service = service;
-        isStopped=false;
-        executor.execute(this::executeMessage);
-        
-    }
-
-    public void init() {
+    public void init() {        
+        executor=Executors.newFixedThreadPool(WORKERS_COUNT);
         executor.execute(this::sendMessage);
         executor.execute(this::receiveMessage);
+        
     }
 
     protected BlockingQueue<MessageContainer> getOutput() {
@@ -71,6 +60,11 @@ public class MessageHandlerService {
 
     public void send(MessageContainer message) {
          output.add(message);
+    }
+    
+    public void startExec() {
+        isStopped = false;
+        executor.execute(this::executeMessage);
     }
 
     protected void sendMessage() {
@@ -125,27 +119,24 @@ public class MessageHandlerService {
             }
         }
     }
-    
-    private void execMSMessage(Message message){
-        if(message.getMessage().equalsIgnoreCase("shutdown")){
+
+    private void execMSMessage(Message message) {
+        if (message.getMessage().equalsIgnoreCase("shutdown")) {
             close();
         }
     }
-    
-    public void close() {
-        if (!isStopped) {
-            isStopped = true;
-            try {
-                socket.close();
-            } catch (IOException ex) {
-                logger.log(Level.SEVERE, ex.getMessage());
-            }
-            service.shutDown();
-            executor.shutdown();            
-        }
-    }
-    public void shutdownService(){
+
+    public void shutdownService() {
         isStopped=true;
         service.shutDown();
     }
+
+    public void close() {
+        shutdownService();
+        if (executor != null) {
+            executor.shutdown();
+        }
+        executor = null;
+    }
 }
+
