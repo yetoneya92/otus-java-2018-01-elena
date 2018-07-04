@@ -54,12 +54,13 @@ public class DataServlet extends HttpServlet {
             } else {
                 String name = request.getParameter("tablename");
                 if (name.equalsIgnoreCase("baby")) {
-                    if (request.getParameter("phone").equalsIgnoreCase("")
+                    if (request.getParameter("cellphone").equalsIgnoreCase("")||request.getParameter("homephone").equalsIgnoreCase("")
                             || request.getParameter("babyname").equalsIgnoreCase("")) {
                         pageVariables.put("result", "invalid data");
                     } else {
-                        int phone = Integer.parseInt(request.getParameter("phone"));
-                        Baby baby = new Baby(request.getParameter("babyname"), new Phone(phone));
+                        int cellPhone = Integer.parseInt(request.getParameter("cellphone"));
+                        int homePhone = Integer.parseInt(request.getParameter("homephone"));
+                        Baby baby = new Baby(request.getParameter("babyname"), new Phone(cellPhone,homePhone));
                         Message message = new Message(baby);
                         ClientSocket.getClientSocket().getHandler().send(new MessageContainer(message, ClientMain.ADDRESS, serviceAddress));
                         pageVariables.put("result", "has accepted");

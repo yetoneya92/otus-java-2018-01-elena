@@ -51,7 +51,6 @@ public class MessageHandlerClient {
         try (PrintWriter out = new PrintWriter(socket.getOutputStream(), true)) {
             while (socket.isConnected()) {
                 MessageContainer msg = output.take();
-                System.out.println("client sendMessage"+msg.getMessage());//blocks
                 String json = new Gson().toJson(msg);
                 out.println(json);
                 out.println();//line with json + an empty line
@@ -76,7 +75,10 @@ public class MessageHandlerClient {
             }
         } catch (IOException e) {
             logger.log(Level.SEVERE, e.getMessage());
-        }    
+        }
+        finally{
+            close();
+        }
     }
 
     private void sortMessage(MessageContainer msg) {
