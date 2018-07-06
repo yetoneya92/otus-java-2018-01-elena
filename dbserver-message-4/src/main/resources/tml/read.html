@@ -1,0 +1,94 @@
+
+<html  xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Read</title>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <script type="text/javascript">
+            var webSocket;
+
+            function connect() {
+            // open the connection if one does not exist
+            if (webSocket !== undefined
+            && webSocket.readyState !== WebSocket.CLOSED) {
+            return;
+            }
+            // Create a websocket
+            
+            webSocket = new WebSocket("ws://localhost:8091/dbservice");
+            webSocket.onopen = function(event) {
+            updateOutput("Connected!");
+            document.getElementById("connectBtn").disabled = true;
+            document.getElementById("sendBtn").disabled = false;
+            };
+            webSocket.onmessage = function(event) {
+            updateOutput(event.data);
+            };
+            webSocket.onclose = function(event) {
+            updateOutput("Connection Closed");
+            document.getElementById("connectBtn").disabled = false;
+            document.getElementById("sendBtn").disabled = true;
+            };
+            }
+            function send() {
+            if(document.data.tablename.value==""){            
+            document.getElementById("output").innerHTML += "<br/>"+"invalid data";
+            return;
+            }
+            var sone="read,"+document.data.tablename.value+",";
+            if(document.data._id.value!=""){
+            var stwo="id,"+document.data._id.value;
+            }
+            else if(document.data._name.value!=""){
+            var stwo="name,"+document.data._name.value;
+            }
+            else{
+            document.getElementById("output").innerHTML += "<br/>"+"invalid data";
+            return;
+            }
+            var text=sone+stwo;            
+            webSocket.send(text);
+            document.getElementById("output").innerHTML += "<br/>" + "send";
+            }
+            function closeSocket() {
+            webSocket.close();
+            }
+            function updateOutput(text) {
+            document.getElementById("output").innerHTML += "<br/>"+text;
+            }
+        </script>
+    </head>
+    <body>        
+        <div>           
+            <img src="images/service.png"/>
+            <br/>
+            <a href="index.html">Index</a> <a href="client">Action</a>
+        </div>
+        <form  name="data">             
+            <table>
+                <tr>
+                    <td>Table: </td>
+                    <td><input type="text" name="tablename" size="30"/></td>
+                </tr>
+                <tr>
+                    <td>Id: </td>
+                    <td><input type="number" name="_id" size="30"/></td>
+                </tr> 
+                <tr>
+                    <td>Name: </td>
+                    <td><input type="text" name="_name" size="30"/></td>
+                </tr> 
+            </table>
+            <p>Designate id or name</p> 
+            <br/>
+            <input type="button" id="connectBtn" value="connect" size="15"
+                   onclick="connect()" />
+            <input type="button" id="sendBtn"
+                   value="send" size="15" onclick="send()" disabled="disabled"/>
+            <input type="button" id="disconnectBtn"
+                   value="disconnect" size="15" onclick="closeSocket()"/>
+            <input type="reset" value="reset" size="15"/>
+        </form>
+        <div id="output">Output:</div>        
+    </body>
+</html>

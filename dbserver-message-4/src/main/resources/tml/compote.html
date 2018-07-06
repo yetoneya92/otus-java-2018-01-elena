@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Compote</title>
+        <meta charset="UTF-8"/>
+               <script type="text/javascript">
+            var webSocket;
+
+            function connect() {
+            if (webSocket !== undefined
+            && webSocket.readyState !== WebSocket.CLOSED) {
+            return;
+            }
+
+            webSocket = new WebSocket("ws://localhost:8091/dbservice");
+            webSocket.onopen = function(event) {
+            updateOutput("Connected!");
+            document.getElementById("connectBtn").disabled = true;
+            document.getElementById("sendBtn").disabled = false;
+            };
+            webSocket.onmessage = function(event) {
+            updateOutput(event.data);
+            };
+            webSocket.onclose = function(event) {
+            updateOutput("Connection Closed");
+            document.getElementById("connectBtn").disabled = false;
+            document.getElementById("sendBtn").disabled = true;
+            };
+            }
+            function send() { 
+            var error="invalid data";
+            var name=document.data.compotename.value;
+            if(name==""){
+            document.getElementById("output").innerHTML += "<br/>" + error;
+            return;
+            }
+            var compote="write,compote,"+name;           
+            var sone=document.data.fruitone.value;
+            var none=document.data.numberone.value;
+            if(none==""||sone==""){
+            document.getElementById("output").innerHTML += "<br/>" + error;
+            return;
+            }
+            var snone=","+sone+","+none;
+            var stwo=document.data.fruittwo.value;
+            var ntwo=document.data.numbertwo.value;
+            var sntwo="";
+            if(stwo!=""&&ntwo!=""){
+            sntwo=","+stwo+","+ntwo;
+            }
+            var sthree=document.data.fruitthree.value;
+            var nthree=document.data.numberthree.value;
+            var snthree="";
+            if(sthree!=""&&nthree!=""){
+            snthree=","+sthree+","+nthree;
+            }
+            var sfour=document.data.fruitfour.value;
+            var nfour=document.data.numberfour.value;
+            var snfour="";
+            if(sfour!=""&&nfour!=""){
+            snfour=","+sfour+","+nfour;
+            }
+            var sfive=document.data.fruitfive.value;
+            var nfive=document.data.numberfive.value;
+            var snfive="";
+            if(sfive!=""&&nfive!=""){
+            snfive=","+sfive+","+nfive;
+            }
+            var ssix=document.data.fruitsix.value;
+            var nsix=document.data.numbersix.value;
+            var snsix="";
+            if(ssix!=""&&nsix!=""){
+            snsix=","+ssix+","+nsix;
+            }
+            var text=compote+snone+sntwo+snfour+snfive+snsix;
+            webSocket.send(text);
+            document.getElementById("output").innerHTML += "<br/>" + "send";
+            }
+            function closeSocket() {
+            webSocket.close();
+            }
+            function updateOutput(text) {
+            document.getElementById("output").innerHTML += "<br/>" + text;
+            }
+        </script>
+    </head>
+    <body>
+        <div>           
+            <img src="images/compote.png"/>
+            <br/>
+            <a href="index.html">Index</a> <a href="clientaction">Action</a>
+        </div>
+        <form  name="data">
+            <input type="hidden" name="tablename" value="compote"/>    
+            <table>
+                <tr>
+                    <td>Compote name:</td>
+                    <td><input type="text" name="compotename" size="20"/></td>
+                </tr>             
+                <tr>
+                    <th>fruit</th>
+                    <th>number</th>
+                </tr>
+                <tr>
+                    <td><input type="text" name="fruitone" size="20" value="apple"/></td>
+                    <td><input type="number" name="numberone" size="20" value="5"/></td>
+                </tr>
+                <tr>
+                    <td><input type="text" name="fruittwo" size="20"/></td>
+                    <td><input type="number" name="numbertwo" size="20"/></td>
+                </tr> 
+                <tr>
+                    <td><input type="text" name="fruitthree" size="20"/></td>
+                    <td><input type="number" name="numberthree" size="20"/></td>
+                </tr>
+                <tr>
+                   <td><input type="text" name="fruitfour" size="20"/></td>
+                    <td><input type="number" name="numberfour" size="20"/></td>
+                </tr> 
+                <tr>
+                     <td><input type="text" name="fruitfive" size="20"/></td>
+                    <td><input type="number" name="numberfive" size="20"/></td>
+                </tr>
+                <tr>
+                    <td><input type="text" name="fruitsix" size="20"/></td>
+                    <td><input type="number" name="numbersix" size="20"/></td>
+                </tr> 
+            </table>
+            <input type="button" id="connectBtn" value="connect"
+                   onclick="connect()" />
+            <input type="button" id="sendBtn"
+                   value="send" onclick="send()" disabled="disabled"/>
+            <input type="button" id="disconnectBtn"
+                   value="disconnect" size="15" onclick="closeSocket()"/>
+            <input type="reset" value="reset"/>
+        </form>
+        <div id="output">
+            <p>Output</p>
+        </div>
+    </body>
+</html>

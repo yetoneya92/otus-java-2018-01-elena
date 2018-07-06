@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html  xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Baby</title>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+                <script type="text/javascript">
+            var webSocket;
+
+            function connect() {
+            if (webSocket !== undefined
+            && webSocket.readyState !== WebSocket.CLOSED) {
+            return;
+            }
+            
+            webSocket = new WebSocket("ws://localhost:8091/dbservice");
+            webSocket.onopen = function(event) {
+            updateOutput("Connected!");
+            document.getElementById("connectBtn").disabled = true;
+            document.getElementById("sendBtn").disabled = false;
+            };
+            webSocket.onmessage = function(event) {
+            updateOutput(event.data);
+            };
+            webSocket.onclose = function(event) {
+            updateOutput("Connection Closed");
+            document.getElementById("connectBtn").disabled = false;
+            document.getElementById("sendBtn").disabled = true;
+            };
+            }
+            function send() {
+            var error="invalid data";
+            if(document.data.babyname.value==""){
+            document.getElementById("output").innerHTML += "<br/>" + error;
+            return;
+            }                        
+            var sone="write,"+document.data.tablename.value+","+document.data.babyname.value+",";
+            if(document.data.cellphone.value==""){
+            document.getElementById("output").innerHTML += "<br/>" + error;
+            return;
+            }
+            var stwo=document.data.cellphone.value+",";
+            if(document.data.homephone.value==""){
+            document.getElementById("output").innerHTML += "<br/>" + error;
+            return;
+            }
+            sthree=document.data.homephone.value;
+            var text = sone+stwo+sthree;
+            document.getElementById("output").innerHTML += "<br/>" + "send";
+            webSocket.send(text);
+            }
+            function closeSocket() {
+            webSocket.close();
+            }
+            function updateOutput(text) {
+            document.getElementById("output").innerHTML += "<br/>" + text;
+            }
+        </script>
+    </head>
+    <body>        
+        <div>           
+            <img src="images/baby.png"/>
+            <br/>
+            <a href="client">Action</a>
+        </div>
+        <form  name="data">
+            <input type="hidden" name="tablename" value="baby"/>
+            <table>
+                <tr>
+                    <td>Name: </td>
+                    <td><input type="text" name="babyname" size="30"/></td>
+                </tr>
+                <tr>
+                    <td>Cell phone: </td>
+                    <td><input type="number" name="cellphone" size="30"/></td>
+                </tr> 
+                <tr>
+                    <td>Home phone: </td>
+                    <td><input type="number" name="homephone" size="30"/></td>
+                </tr> 
+            </table>
+            <input type="button" id="connectBtn" value="connect"
+                   onclick="connect()" />
+            <input type="button" id="sendBtn"
+                   value="send" onclick="send()" disabled="disabled"/>
+            <input type="button" id="disconnectBtn"
+                   value="disconnect" size="15" onclick="closeSocket()"/>
+            <input type="reset" value="reset"/>
+        </form>
+        <div id="output">
+            Output:
+        </div>
+    </body>
+</html>
