@@ -21,6 +21,40 @@ public class Serializator {
     Object obj=null;
 
     public String toJson(Object obj) {
+        if (obj == null) {
+            return null;
+        }
+        Class<?> clazz = obj.getClass();
+        if(clazz.equals(java.lang.Byte.class)){
+            return Byte.toString((byte) obj);
+        }
+
+        if (clazz.equals(java.lang.Short.class)) {
+            return Short.toString((short) obj);
+        }
+
+        if (clazz.equals(java.lang.Integer.class)) {
+            return Integer.toString((int) obj);
+        }
+
+        if (clazz.equals(java.lang.Long.class)) {
+            return Long.toString((long) obj);
+        }
+
+        if (clazz.equals(java.lang.Float.class)) {
+            return Float.toString((float) obj);
+        }
+
+        if (clazz.equals(java.lang.Double.class)) {
+            return Double.toString((double) obj);
+        }
+        if(clazz.equals(java.lang.Character.class)||clazz.equals(java.lang.String.class)){
+            return "\""+(String)obj+"\"";
+        }
+        if(clazz.equals(java.lang.Boolean.class)){
+            return obj.toString();
+        }
+
         try {
             if (obj != null) {
                 memory.add(obj);
@@ -45,7 +79,7 @@ public class Serializator {
             json.append("}");
             return json.toString();
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            System.out.println("не сериализуется: "+e.getMessage());
             return null;
         }
     }

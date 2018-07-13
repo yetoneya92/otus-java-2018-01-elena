@@ -22,6 +22,16 @@ public class Main {
         System.out.println(sSharic);
         Gson gson = new Gson();
         Person reSharic = gson.fromJson(sSharic, Person.class);
+        reSharic.setCreationalDate();
         System.out.println(reSharic);
+        //System.out.println(gson.toJson(null));
+        //System.out.println(gson.toJson(123));
+        //System.out.println(gson.toJson("abc"));
+        System.out.println(gson.toJson(true));
+        System.out.println(new Serializator().toJson(null));
+        System.out.println(new Serializator().toJson(123));
+        System.out.println(new Serializator().toJson("abc"));
+        System.out.println(new Serializator().toJson(true));
+
     }
 }
