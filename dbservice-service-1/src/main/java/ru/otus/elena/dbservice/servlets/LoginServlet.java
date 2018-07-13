@@ -1,7 +1,7 @@
 
 package ru.otus.elena.dbservice.servlets;
 
-import ru.otus.elena.dbservice.services.TemplateProcessor;
+import ru.otus.elena.dbservice.servlets.context.TemplateProcessor;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -12,32 +12,25 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.json.simple.JSONObject;
-
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import ru.otus.elena.dbservice.main.DBServicePreference;
+import org.springframework.beans.factory.annotation.Autowired;
+import ru.otus.elena.dbservice.servlets.context.DBServiceContext;
+import ru.otus.elena.dbservice.servlets.context.ServiceSetting;
 
 public class LoginServlet extends HttpServlet {
 
     private static final String ACTIONS_PAGE_TEMPLATE = "adminactions.html";
-    private static final String LOGIN_PAGE_TEMPLATE="login.html";
-    private final TemplateProcessor templateProcessor;
+    private static final String LOGIN_PAGE_TEMPLATE = "login.html";
+    private TemplateProcessor templateProcessor = DBServiceContext.getTemplateProcessor();
+    private ServiceSetting serviceSetting = DBServiceContext.getServiceSetting();
 
-    @SuppressWarnings("WeakerAccess")
-    public LoginServlet(TemplateProcessor templateProcessor) {
-        this.templateProcessor = templateProcessor;
-    }
-
-    @SuppressWarnings("WeakerAccess")
-    public LoginServlet() throws IOException {
-        this(new TemplateProcessor());
-    }
 
     @Override
     public void doPost(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
         Map<String, Object> pageVariables = new HashMap<>();
-        String page;
+        String page=null;
         try {
             JSONParser parser = new JSONParser();
             InputStream ins = LoginServlet.class.getResourceAsStream("/json/password.json");
@@ -51,11 +44,11 @@ public class LoginServlet extends HttpServlet {
                 pageVariables.put("result", "invalid loogin or password");
                 page = templateProcessor.getPage(LOGIN_PAGE_TEMPLATE, pageVariables);
             } else {
-                pageVariables.put("result", "");
-                page = templateProcessor.getPage(ACTIONS_PAGE_TEMPLATE, pageVariables);
-                DBServicePreference.getDBServicePreference().setLogin(login);
+                serviceSetting.setLogin(login);
+                response.sendRedirect(request.getContextPath() + "/action");
+                // pageVariables.put("result", "");
+                //page = templateProcessor.getPage(ACTIONS_PAGE_TEMPLATE, pageVariables);
             }
-
             response.setContentType("text/html;charset=utf-8");
             response.getWriter().println(page);
             response.setStatus(HttpServletResponse.SC_OK);

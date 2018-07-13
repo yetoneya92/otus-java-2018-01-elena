@@ -4,57 +4,48 @@
 package ru.otus.elena.dbservice.servlets;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import ru.otus.elena.dbservice.services.TemplateProcessor;
-import ru.otus.elena.dbservice.interfaces.Service;
-import ru.otus.elena.dbservice.main.DBServicePreference;
+import org.springframework.beans.factory.annotation.Autowired;
+import ru.otus.elena.dbservice.dbservice.DBServiceImpl;
+import ru.otus.elena.dbservice.servlets.context.DBServiceContext;
+import ru.otus.elena.dbservice.servlets.context.TemplateProcessor;
+import ru.otus.elena.dbservice.servlets.context.ServiceSetting;
+import ru.otus.elena.dbservice.socket.MessageHandlerService;
 
 public class TableServlet extends HttpServlet{
     private static final String LOGIN_PAGE_TEMPLATE = "login.html";   
     private static final String CREATE_PAGE_TEMPLATE = "createtable.html";
     private static final String DELETE_PAGE_TEMPLATE = "deletetable.html";
     private static final String ACTION_PAGE_TEMPLATE = "adminactions.html";
-    private final TemplateProcessor templateProcessor;
-    
-    @SuppressWarnings("WeakerAccess")
-    public TableServlet(TemplateProcessor templateProcessor) {
-        this.templateProcessor = templateProcessor;        
-    }
+    private TemplateProcessor templateProcessor = DBServiceContext.getTemplateProcessor();
+    private ServiceSetting serviceSetting = DBServiceContext.getServiceSetting();
+    private DBServiceImpl dBService = DBServiceContext.getdBService();
 
-    @SuppressWarnings("WeakerAccess")
-    public TableServlet() throws IOException {
-        this(new TemplateProcessor());
-    }
-
+  
     @Override
     public void doPost(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
         Map<String, Object> pageVariables = new HashMap<>();
         String page = null;
-        String login = DBServicePreference.getDBServicePreference().getLogin();
+        String login = serviceSetting.getLogin();
         if (login == null) {
             pageVariables.put("result", "");
             page = templateProcessor.getPage(LOGIN_PAGE_TEMPLATE, pageVariables);
         } else {
-            Service service = DBServicePreference.getDBServicePreference().getService();
             String action = request.getParameter("action");
             switch (action) {
                 case "create":
                     String ctable = request.getParameter("table");                    
-                    if (service != null) {
-                        boolean isCreated = service.createTable(ctable);
-                        if (isCreated) {
-                            pageVariables.put("result", "table " + ctable + " has created");
-                            page = templateProcessor.getPage(CREATE_PAGE_TEMPLATE, pageVariables);
-                        } else {
-                            pageVariables.put("result", "table " + ctable + " has not created or already exists");
-                            page = templateProcessor.getPage(CREATE_PAGE_TEMPLATE, pageVariables);
-                        }
+                    if (dBService != null) {
+                        ArrayList<String> messages = dBService.createTable(ctable);
+                        pageVariables.put("result", messages.toString());
+                        page = templateProcessor.getPage(CREATE_PAGE_TEMPLATE, pageVariables);
                     } else {
                         pageVariables.put("result", "table " + ctable + " service doesn't exist");
                         page = templateProcessor.getPage(CREATE_PAGE_TEMPLATE, pageVariables);
@@ -62,12 +53,12 @@ public class TableServlet extends HttpServlet{
                     break;
                 case "delete":
                     String dtable = request.getParameter("table");
-                    if (service != null) {
+                    if (dBService != null) {
                         boolean isDeleted = false;
                         if (dtable.equalsIgnoreCase("all")) {
-                            isDeleted = service.deleteAllTables();
+                            isDeleted = dBService.deleteAllTables();
                         } else {
-                            isDeleted = service.deleteTable(dtable);
+                            isDeleted = dBService.deleteTable(dtable);
                         }
                         if (isDeleted) {
                             pageVariables.put("result", "table: " + dtable + " has deleted");
@@ -96,7 +87,7 @@ public class TableServlet extends HttpServlet{
             HttpServletResponse response) throws ServletException, IOException {
         Map<String, Object> pageVariables = new HashMap<>();
         String page = null;
-        String login = DBServicePreference.getDBServicePreference().getLogin();
+        String login = serviceSetting.getLogin();
         if (login == null) {
             pageVariables.put("result", "");
             page = templateProcessor.getPage(LOGIN_PAGE_TEMPLATE, pageVariables);

@@ -15,7 +15,7 @@ public class SimpleExecutor {
 
     public int execUpdate(String command) throws SQLException {
         try (Statement stmt = connection.createStatement()) {
-            stmt.execute(command);
+            stmt.execute(command);            
             return stmt.getUpdateCount();
 
         }
