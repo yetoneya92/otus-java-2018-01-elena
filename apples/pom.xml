@@ -66,6 +66,7 @@
                             <mainClass>ru.otus.elena.apples.Main</mainClass>
                         </manifest>
                     </archive>
+                    <finalName>name2</finalName>
                 </configuration>
             </plugin>
             <plugin>
