@@ -64,9 +64,9 @@ public class Serializator {
             s:
             for (Field field : obj.getClass().getDeclaredFields()) {
                 field.setAccessible(true);
-                String s = Modifier.toString(field.getModifiers());
-                Transient trans = field.getAnnotation(Transient.class);
-                if (trans != null || s.contains("transient")) {
+                boolean isTransient = Modifier.isTransient(field.getModifiers());
+                
+                if (isTransient) {
                     continue s;
                 }
                 json.append("\"").append(field.getName()).append("\":");

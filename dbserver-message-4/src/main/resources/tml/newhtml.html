@@ -1,0 +1,117 @@
+
+<html>
+    <head>
+        <script type="text/javascript">
+            var webSocket;
+            var output = document.getElementById("output");
+            var connectBtn = document.getElementById("connectBtn");
+            var sendBtn = document.getElementById("sendBtn");
+            
+            function connect() {
+            // open the connection if one does not exist
+            if (webSocket !== undefined
+            && webSocket.readyState !== WebSocket.CLOSED) {
+            return;
+            }
+            // Create a websocket
+            
+            webSocket = new WebSocket("ws://localhost:8080/toUpper");
+            webSocket.onopen = function(event) {
+            updateOutput("Connected!");
+            connectBtn.disabled = true;
+            sendBtn.disabled = false;
+            };
+            webSocket.onmessage = function(event) {
+            updateOutput(event.data);
+            };
+            webSocket.onclose = function(event) {
+            updateOutput("Connection Closed");
+            connectBtn.disabled = false;
+            sendBtn.disabled = true;
+            };
+            }
+            function send() {
+            var text = document.getElementById("input").value;
+            webSocket.send(text);
+            }
+            function closeSocket() {
+            webSocket.close();
+            }
+            function updateOutput(text) {
+            output.innerHTML += "<br/>" + text;
+            }
+        </script></head>
+    <body>
+        <div>
+            <input type="text" id="input" />
+        </div>
+        <div>
+            <input type="button" id="connectBtn" value="CONNECT"
+                   onclick="connect()" />
+            <input type="button" id="sendBtn"
+                   value="SEND" onclick="send()" disabled="disabled"/>
+        </div>
+        <div id="output">
+            <p>Output</p>
+        </div>
+    </body>
+
+</html>
+
+            
+                                   var error="invalid data";
+            if(document.data.compotename.value==""){
+            document.getElementById("output").innerHTML += "<br/>" + error;
+            return;
+            }                        
+            var sname="write,"compote","+document.data.compotename.value+",";
+            var counter=0;
+            var f1=document.document.data.fruit1.value;
+            var n1=document.data.number1.value;
+            var s1="";
+            if(f1 != "" && n1 != ""){
+            s1=","+f1+","+n1;
+            document.getElementById("output").innerHTML += "<br/>" + "s1";
+            counter++;
+            }
+            var f2=document.document.data.fruit2.value;
+            var n2=document.data.number2.value;
+            var s2="";
+            if(f2 != "" && n2 != ""){
+            s2=","+f2+","+n2;
+            counter++;
+            }
+            var f3=document.document.data.fruit3.value;
+            var n3=document.data.number3.value;
+            var s3="";
+            if(f3 != "" && n3 != ""){
+            s3=","+f3+","+n3;
+               counter++;
+            }
+            var f4=document.document.data.fruit4.value;
+            var n4=document.data.number4.value;
+            var s4="";
+            if(f4 != "" && n4 != ""){
+               s4=","+f4+","+n4;
+               counter++;
+            }
+            var f5=document.document.data.fruit5.value;
+            var n5=document.data.number5.value;
+            var s5="";
+            if(f5 != "" && n5 != ""){
+               s5=","+f5+","+n5;
+               counter++;
+            }
+            var f6=document.document.data.fruit6.value;
+            var n6=document.data.number6.value;
+            var s6="";
+            if(f6 != "" && n6 != ""){
+               s6=","+f6+","+n6;
+               counter++;
+            }
+            document.getElementById("output").innerHTML += "<br/>" + counter;
+            if(counter==0){
+            document.getElementById("output").innerHTML += "<br/>" + "invalid data";
+            return;
+            }
+            var text=sname+s1+s2+s3+s4+s5+s6; 

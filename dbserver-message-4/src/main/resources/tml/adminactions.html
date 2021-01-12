@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Admin actions</title>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </head>
+    <body>        
+        <div>
+            <img src="images/adminactions.png"/>
+            <br/><br/>
+            <a href="index.html">Index</a>
+            <br/>
+        </div>
+        <form action="/action" method="post">
+            <p><input type="radio" name="action" value="setservice" checked="checked"/>Set service</p>
+            <p><input type="radio" name="action" value="create"/>Create table</p>
+            <p><input type="radio" name="action" value="delete"/>Delete tables</p>
+            <p><input type="radio" name="action" value="cache"/>Cache parameters</p>
+            <p><input type="radio" name="action" value="test"/>Test</p>
+            <p><input type="radio" name="action" value="shutdown"/>Shutdown service</p>
+            <p><input type="radio" name="actiom" value="something"/>Something interesting</p>
+            <p><input type="submit" value="continue"/></p> 
+
+        </form>
+        <p>${result}</p>
+    </body>
+</html>

@@ -1,0 +1,30 @@
+
+<html  xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Delete</title>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </head>
+    <body>        
+        <div>           
+            <img src="images/service.png"/>
+            <br/>
+            <a href="admin">Admin</a> <a href="index.html">Index</a>
+        </div>
+        <form  action="/table" method="post">
+            <input type="hidden" name="action" value="delete"/>
+            <p>To delete all tables - "all"</p>
+            <table>
+                <tr>
+                    <td>Table name: </td>
+                    <td><input type="text" name="table" size="30"/></td>
+                </tr> 
+            </table>           
+            <p>
+                <input type="submit" value="continue"/>
+                <input type="reset" value="reset"/>
+            </p> 
+        </form>
+        <p>${result}</p>
+    </body>
+</html>

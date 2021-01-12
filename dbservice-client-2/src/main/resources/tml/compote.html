@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Compote</title>
+        <meta charset="UTF-8"/>
+       
+    </head>
+    <body>
+        <div>           
+            <img src="images/compote.png"/>
+            <br/>
+            <a href="index.html">Index</a> <a href="message">Message</a> <a href="service">Service</a> <a href="action">Action</a>
+        </div>
+        <form  action="/data" method="post">
+            <input type="hidden" name="tablename" value="compote"/>    
+            <table>
+                <tr>
+                    <td>Compote name:</td>
+                    <td><input type="txt" name="compotename" size="20"/></td>
+                </tr>             
+                <tr>
+                    <th>fruit</th>
+                    <th>number</th>
+                </tr>
+                <tr>
+                    <td><input type="text" name="fruit1" size="20" value="apple"/></td>
+                    <td><input type="number" name="number1" size="20" value="5"/></td>
+                </tr>
+                <tr>
+                    <td><input type="text" name="fruit2" size="20"/></td>
+                    <td><input type="number" name="number2" size="20"/></td>
+                </tr> 
+                <tr>
+                    <td><input type="text" name="fruit3" size="20"/></td>
+                    <td><input type="number" name="number3" size="20"/></td>
+                </tr>
+                <tr>
+                   <td><input type="text" name="fruit4" size="20"/></td>
+                    <td><input type="number" name="number4" size="20"/></td>
+                </tr> 
+                <tr>
+                     <td><input type="text" name="fruit5" size="20"/></td>
+                    <td><input type="number" name="number5" size="20"/></td>
+                </tr>
+                <tr>
+                    <td><input type="text" name="fruit6" size="20"/></td>
+                    <td><input type="number" name="number6" size="20"/></td>
+                </tr> 
+                 <tr>
+                    <td><input type="text" name="fruit7" size="20"/></td>
+                    <td><input type="number" name="number7" size="20"/></td>               
+                </tr>
+                <tr>
+                    <td><input type="text" name="fruit8" size="20"/></td>
+                    <td><input type="number" name="number8" size="20"/></td>
+                </tr> 
+                 <tr>
+                    <td><input type="text" name="fruit9" size="20"/></td>
+                    <td><input type="number" name="number9" size="20"/></td>
+                </tr> 
+                <tr>
+                    <td><input type="text" name="fruit10" size="20"/></td>
+                    <td><input type="number" name="number10" size="20"/></td>
+                </tr>
+            </table>
+            <p>
+                <input type="submit" value="continue"/>
+                <input type="reset" value="reset"/>
+            </p> 
+        </form>
+        <p>${result}</p>      
+    </body>
+</html>

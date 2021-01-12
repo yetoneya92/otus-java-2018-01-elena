@@ -1,6 +1,7 @@
 
 package ru.otus.elena.serializator;
 
+import java.beans.Transient;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,6 +24,7 @@ public class Person {
     Map<Integer, Double> weight = new HashMap<>();
     int[] legs = {1, 2, 3, 4};   
     Owner owner;
+    
     transient LocalDate creationalDate;
     
     public Person(String name, int age,
